@@ -15,8 +15,10 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.23.5
 
       - name: Build
         run: npm run build
@@ -33,8 +35,10 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.23.5
 
       - name: Typecheck
         run: npm run typecheck
@@ -51,8 +55,10 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.23.5
 
       - name: Test
         run: npm run test -- --ci --coverage --maxWorkers=2
@@ -69,8 +75,10 @@ jobs:
         with:
           node-version: 14
 
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.23.5
 
       - name: Build
         run: npm run build
