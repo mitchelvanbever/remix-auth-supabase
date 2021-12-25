@@ -20,8 +20,11 @@ jobs:
         with:
           version: 6.23.5
 
+      - name: Install
+        run: pnpm install
+
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
   typecheck:
     name: Typechecker
@@ -40,8 +43,11 @@ jobs:
         with:
           version: 6.23.5
 
+      - name: Install
+        run: pnpm install
+
       - name: Typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
 
   test:
     name: Unit and Integration Tests
@@ -60,8 +66,11 @@ jobs:
         with:
           version: 6.23.5
 
+      - name: Install
+        run: pnpm install
+
       - name: Test
-        run: npm run test -- --ci --coverage --maxWorkers=2
+        run: pnpm run test -- --ci --coverage --maxWorkers=2
 
   lint:
     name: Linter
@@ -80,8 +89,11 @@ jobs:
         with:
           version: 6.23.5
 
+      - name: Install
+        run: pnpm install
+
       - name: Build
-        run: npm run build
+        run: pnpm run build
 
       - name: Lint
-        run: npm run lint
+        run: pnpm run lint
