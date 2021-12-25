@@ -70,7 +70,7 @@ jobs:
         run: pnpm install
 
       - name: Test
-        run: pnpm run test -- --ci --coverage --maxWorkers=2
+        run: pnpm run test
 
   lint:
     name: Linter
