@@ -1,6 +1,13 @@
 {
-  "name": "remix-auth-supabase-strategy",
-  "version": "0.0.0",
+  "name": "@afaik/remix-auth-supabase-strategy",
+  "version": "0.0.1",
+  "author": {
+    "name": "mitchelvanbever",
+    "twitter": "@ghostethedev"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
@@ -8,7 +15,7 @@
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint --ext .ts,.tsx src/",
     "test": "vitest",
-    "test:cov": "c8 vitest"
+    "cov": "vitest --coverage"
   },
   "keywords": [
     "remix",
@@ -32,19 +39,21 @@
     "@remix-run/node": "^1.0.3",
     "@remix-run/react": "^1.1.1",
     "@remix-run/server-runtime": "^1.0.0",
-    "@types/jest": "^26.0.23",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
+    "@types/faker": "^5.5.9",
     "c8": "^7.10.0",
     "eslint": "^7.26.0",
+    "faker": "^5.5.3",
     "jsdom": "^19.0.0",
+    "msw": "^0.36.3",
     "react": "^17.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.3.5",
     "vite": "^2.7.6",
-    "vitest": "^0.0.113"
+    "vitest": "^0.0.115",
+    "whatwg-fetch": "^3.6.2"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^1.29.1",
     "remix-auth": "^3.0.0"
   },
   "eslintConfig": {
