@@ -1,6 +1,13 @@
 {
-  "name": "remix-auth-supabase-strategy",
-  "version": "0.0.0",
+  "name": "@afaik/remix-auth-supabase-strategy",
+  "version": "0.0.1",
+  "author": {
+    "name": "mitchelvanbever",
+    "twitter": "@ghostethedev"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
