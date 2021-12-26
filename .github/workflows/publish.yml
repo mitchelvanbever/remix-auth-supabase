@@ -19,6 +19,6 @@ jobs:
           version: 6.23.5
       - run: pnpm install
       - run: pnpm run build
-      - run: pmpn publish
+      - run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
