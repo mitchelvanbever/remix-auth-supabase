@@ -8,8 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - name: Checkout git
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v1
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
@@ -17,8 +19,11 @@ jobs:
         uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.23.5
-      - run: pnpm install
-      - run: pnpm run build
-      - run: pnpm publish
+      - name: pnpm Install
+        run: pnpm install
+      - name: pnpm Install
+        run: pnpm run build
+      - name: pnpm Install
+        run: pnpm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
