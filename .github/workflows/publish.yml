@@ -5,7 +5,8 @@ on:
     types: [published]
 
 jobs:
-  build:
+  publish-package:
+    name: publish-package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -15,7 +16,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-          registry-url: https://registry.npmjs.org/
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2.0.1
