@@ -17,7 +17,7 @@ specifiers:
   remix-auth: ^3.0.0
   typescript: ^4.3.5
   vite: ^2.7.6
-  vitest: ^0.0.118
+  vitest: ^0.0.120
 
 dependencies:
   '@supabase/supabase-js': 1.29.1
@@ -38,7 +38,7 @@ devDependencies:
   react: 17.0.2
   typescript: 4.5.4
   vite: 2.7.9
-  vitest: 0.0.118_c8@7.10.0+vite@2.7.9
+  vitest: 0.0.120_c8@7.10.0+vite@2.7.9
 
 packages:
 
@@ -3723,8 +3723,8 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.0.118_c8@7.10.0+vite@2.7.9:
-    resolution: {integrity: sha512-2zBpowIaVAMPFB+/DkHFpt63QNXMz737dKTpLtC2t4RNUfLS4n+KKg14nFexj5VlhMf4ntSkrvDHnrE+6gFTmg==}
+  /vitest/0.0.120_c8@7.10.0+vite@2.7.9:
+    resolution: {integrity: sha512-puJ8I/FpRpCwif4z9hcZ55PY6oszZNw+1rMdY+YkbtcnCFnKt8sqREnLUDcsvcA8wbM5G//Oa5kohR6CTaXCUA==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:

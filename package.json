@@ -45,7 +45,7 @@
     "react": "^17.0.2",
     "typescript": "^4.3.5",
     "vite": "^2.7.6",
-    "vitest": "^0.0.118"
+    "vitest": "^0.0.120"
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.29.1",

@@ -1,4 +1,4 @@
-/// <reference types="vitest/global" />
+/// <reference types="vitest" />
 
 import { defineConfig } from 'vite'
 
@@ -9,7 +9,6 @@ export default defineConfig({
     setupFiles: ['./test/setup.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],
-      include: ['*.ts'],
     },
   },
 })
