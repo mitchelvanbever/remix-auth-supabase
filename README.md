@@ -4,6 +4,8 @@
 
 This strategy aims to provide an easy way to start using supabase authentication with [Remix.run](https://remix.run/).
 
+For now it supports only email & password authentication but we'll support several strategies given time. Feel free to leave an issue describing the supabase auth method you need the desperate support for 🥰
+
 ## Supported runtimes
 
 | Runtime    | Has Support |
@@ -11,13 +13,55 @@ This strategy aims to provide an easy way to start using supabase authentication
 | Node.js    | ✅          |
 | Cloudflare | ❗          |
 
-* Cloudflare should work but it does require some workarounds [see the cloudflare setup section](#cloudflare-setup).
+* Cloudflare should work but it does require to supply fetch to the supabase as an option
 
 ## How to use
 
 <!-- Explain how to use the strategy, here you should tell what options it expects from the developer when instantiating the strategy -->
+Signing up the user is up to you but is pretty straightforward following the examples of using the supabase.
 
-### Cloudflare setup
+Set up a sessionStorage to pass to the Supabase Strategy.
 
-<!-- Explain how to use the strategy in combination with cloudflare -->
-https://github.com/sergiodxa/remix-auth/issues/49
+Set up `~/auth.server.ts`
+```js
+  export const authenticator = new Authenticator<User>(sessionStorage, { sessionErrorKey: 'session-error', sessionKey: 'session' })
+  authenticator.use(
+    new SupabaseStrategy(
+      {
+        supabaseUrl,
+        supabaseOptions,
+        supabaseKey: supabaseAnonKey,
+      },
+    ),
+    'supabase',
+  )
+```
+
+`~/routes/login.ts`
+```js
+  export const loader: LoaderFunction = async({ request }) =>
+    authenticator.isAuthenticated(request, { successRedirect: '/profile' }) // returns the entire session
+
+  export const action: ActionFunction = async({ request }) =>
+    // redirect based on the response
+    authenticator.authenticate('supabase', request, {
+      successRedirect: '/profile',
+      failureRedirect: '/login',
+    })
+```
+
+`~/routes/profile.ts`
+```js
+  export const loader: LoaderFunction = async({ request }) =>
+    authenticator.isAuthenticated(request, { failureRedirect: '/login' }) // returns the entire session
+
+  // handle logout action
+  export const action: ActionFunction = async({ request }) => {
+    const session = await sessionStorage.getSession(request.headers.get('Cookie'))
+    return redirect('/', {
+      headers: {
+        'Set-Cookie': await sessionStorage.destroySession(session),
+      },
+    })
+  }
+```
