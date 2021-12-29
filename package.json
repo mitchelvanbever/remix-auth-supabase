@@ -1,6 +1,6 @@
 {
   "name": "@afaik/remix-auth-supabase-strategy",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "mitchelvanbever",
     "twitter": "@ghostethedev"
