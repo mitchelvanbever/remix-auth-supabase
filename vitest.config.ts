@@ -5,14 +5,11 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   test: {
     global: true,
-    environment: 'jsdom',
+    environment: 'node',
     setupFiles: ['./test/setup.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],
-      include: ['src/'],
-    },
-    deps: {
-      inline: ['whatwg-fetch'],
+      include: ['*.ts'],
     },
   },
 })
