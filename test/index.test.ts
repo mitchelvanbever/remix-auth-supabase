@@ -1,5 +1,3 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-
 import { SupabaseStrategy } from '../src'
 import { password, user } from '../mocks/user'
 import { sessionStorage } from '../mocks/sessionStorage'
@@ -54,7 +52,8 @@ describe('SUPABASE_AUTH: general', async() => {
     sessionStorage,
     {},
     ).catch(async e =>
-      expect(await e.json()).toEqual({ message: 'Need a valid email and/or password' }))
+      expect(await e.json()).toEqual({ message: 'Need a valid email and/or password' }),
+    )
   })
   it('should handle wrong credentials', async() => {
     const fData = new FormData()
