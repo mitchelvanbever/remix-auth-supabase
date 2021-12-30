@@ -17,7 +17,8 @@ For now it supports only email & password authentication but we'll support sever
 
 ## How to use
 
-<!-- Explain how to use the strategy, here you should tell what options it expects from the developer when instantiating the strategy -->
+Start by installing the strategy `yarn add @afaik/remix-auth-supabase-strategy` | `pnpm install @afaik/remix-auth-supabase-strategy` | `npm install @afaik/remix-auth-supabase-strategy`
+
 Signing up the user is up to you but is pretty straightforward following the examples of using the supabase.
 
 Set up a sessionStorage to pass to the Supabase Strategy.
