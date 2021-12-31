@@ -33,7 +33,7 @@ export interface VerifyParams {
 }
 
 export class SupabaseStrategy extends
-  Strategy<Session, StrategyVerifyCallback<Session, VerifyParams>> {
+  Strategy<Session, VerifyParams> {
   name = 'sb'
   private supabaseClient: SupabaseClient
 
@@ -62,8 +62,10 @@ export class SupabaseStrategy extends
 
     let session
 
+    const params: VerifyParams = { form }
+
     try {
-      session = await this.verify({ form })
+      session = await this.verify(params)
     } catch (e: unknown) {
       return this.failure((e as Error)?.message ?? 'No user found', req, sessionStorage, options)
     }
@@ -130,7 +132,7 @@ export class SupabaseStrategy extends
 
     // if no user but we got this far, we should do some cleanup
     if (!session)
-      return this.failure('No session data found', req, sessionStorage, { failureRedirect: options.failureRedirect })
+      return this.failure('No session data found', req, sessionStorage, options)
 
     // otherwise the token is valid and we should just return the user
     return session
