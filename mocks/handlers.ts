@@ -3,9 +3,22 @@ import { user, password as userPassword } from './user'
 
 export const handlers = [
   rest.post('http://supabase-url.com/supabase-project/auth/v1/token', async(req, res, ctx) => {
-    const { email, password } = JSON.parse(req.body as string)
+    const { email, password, refresh_token } = JSON.parse(req.body as string)
+
+    if (refresh_token && refresh_token === 'test-token')
+      return res(ctx.status(200), ctx.json({ user }))
+
     if (!email || !password || password !== userPassword)
       return res(ctx.status(401), ctx.json({ message: 'Wrong email or password' }))
+    return res(ctx.status(200), ctx.json({ user }))
+  }),
+  rest.get('http://supabase-url.com/supabase-project/auth/v1/user', async(req, res, ctx) => {
+    const token = req.headers.get('authorization').split('Bearer ')[1]
+
+    if (token === 'test-token')
+      return res(ctx.status(401), ctx.json({ error: 'Token expired', user: null }))
+
+    // do some funny stuff with the user
     return res(ctx.status(200), ctx.json({ user }))
   }),
   rest.get('https://localhosted:6969/profile', (req, res, ctx) => {

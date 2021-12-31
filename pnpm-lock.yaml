@@ -7,6 +7,7 @@ specifiers:
   '@remix-run/server-runtime': ^1.0.0
   '@supabase/supabase-js': ^1.29.1
   '@types/faker': ^5.5.9
+  '@vitest/ui': ^0.0.124
   add: ^2.0.6
   c8: ^7.10.0
   eslint: ^7.26.0
@@ -17,7 +18,7 @@ specifiers:
   remix-auth: ^3.0.0
   typescript: ^4.3.5
   vite: ^2.7.6
-  vitest: ^0.0.120
+  vitest: ^0.0.125
 
 dependencies:
   '@supabase/supabase-js': 1.29.1
@@ -30,6 +31,7 @@ devDependencies:
   '@remix-run/react': 1.1.1_react@17.0.2
   '@remix-run/server-runtime': 1.1.1_react@17.0.2
   '@types/faker': 5.5.9
+  '@vitest/ui': 0.0.124_vitest@0.0.125
   c8: 7.10.0
   eslint: 7.32.0
   faker: 5.5.3
@@ -38,7 +40,7 @@ devDependencies:
   react: 17.0.2
   typescript: 4.5.4
   vite: 2.7.9
-  vitest: 0.0.120_c8@7.10.0+vite@2.7.9
+  vitest: 0.0.125_@vitest+ui@0.0.124+c8@7.10.0
 
 packages:
 
@@ -439,6 +441,10 @@ packages:
     resolution: {integrity: sha512-Aq58f5HiWdyDlFffbbSjAlv596h/cOnt2DO1w3DOC7OJ5EHs0hd/nycJfiu9RJbT6Yk6F1knnRRXNSpxoIVZ9Q==}
     dev: true
 
+  /@polka/url/1.0.0-next.21:
+    resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
+    dev: true
+
   /@remix-run/node/1.1.1_react@17.0.2:
     resolution: {integrity: sha512-8WhpjiDqHb+RpsN95vygYrxyui/dWKi9ECJju+/xBuP8pODRKXU9hrCoxVC2FjFRhXUdErkCEDK/AZSDPAlqVw==}
     dependencies:
@@ -700,6 +706,15 @@ packages:
     dependencies:
       '@typescript-eslint/types': 5.8.1
       eslint-visitor-keys: 3.1.0
+    dev: true
+
+  /@vitest/ui/0.0.124_vitest@0.0.125:
+    resolution: {integrity: sha512-vojoOnKiMBwqV4OnndGHvklD2x6BGS0pZc6BMbOtlPPqGpAonzBmnnnfhi1T6CNR/t7x/VJCQCkrXqClH3dysg==}
+    peerDependencies:
+      vitest: 0.0.124
+    dependencies:
+      sirv: 1.0.19
+      vitest: 0.0.125_@vitest+ui@0.0.124+c8@7.10.0
     dev: true
 
   /@web-std/blob/3.0.1:
@@ -2712,6 +2727,11 @@ packages:
       import-meta-resolve: 1.1.1
     dev: true
 
+  /mrmime/1.0.0:
+    resolution: {integrity: sha512-a70zx7zFfVO7XpnQ2IX1Myh9yY4UYvfld/dikWRnsXxbyvMcfz+u6UfgNAtH+k2QqtJuzVpv6eLTx1G2+WKZbQ==}
+    engines: {node: '>=10'}
+    dev: true
+
   /ms/2.0.0:
     resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=}
 
@@ -3335,6 +3355,15 @@ packages:
     resolution: {integrity: sha512-sDl4qMFpijcGw22U5w63KmD3cZJfBuFlVNbVMKje2keoKML7X2UzWbc4XrmEbDwg0NXJc3yv4/ox7b+JWb57kQ==}
     dev: true
 
+  /sirv/1.0.19:
+    resolution: {integrity: sha512-JuLThK3TnZG1TAKDwNIqNq6QA2afLOCcm+iE8D1Kj3GA40pSPsxQjjJl0J8X3tsR7T+CP1GavpzLwYkgVLWrZQ==}
+    engines: {node: '>= 10'}
+    dependencies:
+      '@polka/url': 1.0.0-next.21
+      mrmime: 1.0.0
+      totalist: 1.1.0
+    dev: true
+
   /slash/3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -3543,6 +3572,11 @@ packages:
       is-number: 7.0.0
     dev: true
 
+  /totalist/1.1.0:
+    resolution: {integrity: sha512-gduQwd1rOdDMGxFG1gEvhV88Oirdo2p+KjoYFU7k2g+i7n6AFFbDQ5kMPUsW0pNbfQsB/cwXvT1i4Bue0s9g5g==}
+    engines: {node: '>=6'}
+    dev: true
+
   /tr46/0.0.3:
     resolution: {integrity: sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=}
     dev: true
@@ -3699,6 +3733,30 @@ packages:
       spdx-expression-parse: 3.0.1
     dev: true
 
+  /vite/2.7.10:
+    resolution: {integrity: sha512-KEY96ntXUid1/xJihJbgmLZx7QSC2D4Tui0FdS0Old5OokYzFclcofhtxtjDdGOk/fFpPbHv9yw88+rB93Tb8w==}
+    engines: {node: '>=12.2.0'}
+    hasBin: true
+    peerDependencies:
+      less: '*'
+      sass: '*'
+      stylus: '*'
+    peerDependenciesMeta:
+      less:
+        optional: true
+      sass:
+        optional: true
+      stylus:
+        optional: true
+    dependencies:
+      esbuild: 0.13.15
+      postcss: 8.4.5
+      resolve: 1.20.0
+      rollup: 2.62.0
+    optionalDependencies:
+      fsevents: 2.3.2
+    dev: true
+
   /vite/2.7.9:
     resolution: {integrity: sha512-CyopIJIRrc26Wnbkch5BCHFhQodzeV4jjSegLAEw1RImvXSuoOo2SfpEW9zRVi188WmjJwCqCaoG25C0r4nekw==}
     engines: {node: '>=12.2.0'}
@@ -3723,16 +3781,18 @@ packages:
       fsevents: 2.3.2
     dev: true
 
-  /vitest/0.0.120_c8@7.10.0+vite@2.7.9:
-    resolution: {integrity: sha512-puJ8I/FpRpCwif4z9hcZ55PY6oszZNw+1rMdY+YkbtcnCFnKt8sqREnLUDcsvcA8wbM5G//Oa5kohR6CTaXCUA==}
+  /vitest/0.0.125_@vitest+ui@0.0.124+c8@7.10.0:
+    resolution: {integrity: sha512-gJc2avxoSiA83OtMFcXUymi4BoCFPw8/+/3FCT1IjBQvUHRfUDrf2tYTGcbkeoqIz39f6b0rkZ27eNocVkQifg==}
     engines: {node: '>=14.14.0'}
     hasBin: true
     peerDependencies:
+      '@vitest/ui': '*'
       c8: '*'
       happy-dom: '*'
       jsdom: '*'
-      vite: ^2.7.1
     peerDependenciesMeta:
+      '@vitest/ui':
+        optional: true
       c8:
         optional: true
       happy-dom:
@@ -3742,12 +3802,17 @@ packages:
     dependencies:
       '@types/chai': 4.3.0
       '@types/chai-subset': 1.3.3
+      '@vitest/ui': 0.0.124_vitest@0.0.125
       c8: 7.10.0
       chai: 4.3.4
       local-pkg: 0.4.0
       tinypool: 0.0.6
       tinyspy: 0.2.6
-      vite: 2.7.9
+      vite: 2.7.10
+    transitivePeerDependencies:
+      - less
+      - sass
+      - stylus
     dev: true
 
   /vue-eslint-parser/8.0.1_eslint@7.32.0:

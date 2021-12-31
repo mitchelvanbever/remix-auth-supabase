@@ -1,7 +1,8 @@
+/* eslint-disable brace-style */
 import type { SessionStorage } from '@remix-run/server-runtime'
-import type { Session, SupabaseClient, SupabaseClientOptions } from '@supabase/supabase-js'
+import type { ApiError, Session, SupabaseClient, SupabaseClientOptions, User } from '@supabase/supabase-js'
 import { createClient } from '@supabase/supabase-js'
-import type { AuthenticateOptions } from 'remix-auth'
+import type { AuthenticateOptions, StrategyVerifyCallback } from 'remix-auth'
 import { Strategy } from 'remix-auth'
 
 /**
@@ -27,13 +28,18 @@ export interface MyStrategyOptions {
   supabaseOptions?: SupabaseClientOptions
 }
 
-export class SupabaseStrategy extends Strategy<Partial<Session>, never> {
-  readonly name = 'SUPABASE_AUTH'
+export interface VerifyParams {
+  form?: FormData
+}
+
+export class SupabaseStrategy extends
+  Strategy<Session, StrategyVerifyCallback<Session, VerifyParams>> {
+  name = 'sb'
   private supabaseClient: SupabaseClient
 
   constructor(
     options: MyStrategyOptions,
-    verify: never,
+    verify: StrategyVerifyCallback<Session, VerifyParams>,
   ) {
     super(verify)
 
@@ -51,18 +57,82 @@ export class SupabaseStrategy extends Strategy<Partial<Session>, never> {
     req: Request,
     sessionStorage: SessionStorage,
     options: AuthenticateOptions,
-  ): Promise<Partial<Session>> {
-    const formData = await req.formData()
-    const email = formData.get('email')
-    const password = formData.get('password')
-    if (!email || typeof email !== 'string' || !password || typeof password !== 'string')
-      return this.failure('Need a valid email and/or password', req, sessionStorage, options)
+  ): Promise<Session> {
+    const form = await req.formData()
 
-    return this.supabaseClient.auth.api.signInWithEmail(email, password).then((res) => {
-      if (res?.error || !res.data)
-        return this.failure(res?.error?.message ?? 'No user found', req, sessionStorage, options)
+    let session
 
-      return this.success(res?.data, req, sessionStorage, options)
-    })
+    try {
+      session = await this.verify({ form })
+    } catch (e: unknown) {
+      return this.failure((e as Error)?.message ?? 'No user found', req, sessionStorage, options)
+    }
+
+    if (!session) return this.failure('No user found', req, sessionStorage, options)
+
+    return this.success(session, req, sessionStorage, options)
+  }
+
+  private async extractSession(req: Request, sessionStorage: SessionStorage) {
+    return (await sessionStorage.getSession(req.headers.get('Cookie')))?.data
+  }
+
+  private async getUser(accessToken: string): Promise<{
+    user: User | null
+    data: User | null
+    error: ApiError | null
+  } | undefined> {
+    let res
+
+    try {
+      res = await this.supabaseClient.auth.api.getUser(accessToken)
+    } catch (e) {
+      console.error(e)
+    }
+
+    return res
+  }
+
+  private async handleRefreshToken(refreshToken: string): Promise<{
+    data: Session | null
+    error: ApiError | null
+  }> {
+    let res
+
+    try {
+      res = await this.supabaseClient.auth.api.refreshAccessToken(refreshToken)
+    } catch (e) {
+      console.error(e)
+      throw new Error('No session data found')
+    }
+
+    return res
+  }
+
+  // check for valid JWT tokens and or refresh tokens to return the user
+  async checkSession(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions) {
+    const cookie = await this.extractSession(req, sessionStorage)
+
+    if (!cookie?.session?.refresh_token || !cookie?.session?.access_token)
+      return this.failure('No session data found', req, sessionStorage, options)
+
+    const session = await this.getUser(cookie.session.access_token)
+
+    if (!session || session?.error) {
+      const res = await this.handleRefreshToken(cookie.session.refresh_token)
+
+      if (!res.data || res.error)
+        return this.failure('No session data found', req, sessionStorage, options)
+
+      // flash updated cookie data
+      return this.success(res.data, req, sessionStorage, options)
+    }
+
+    // if no user but we got this far, we should do some cleanup
+    if (!session)
+      return this.failure('No session data found', req, sessionStorage, { failureRedirect: options.failureRedirect })
+
+    // otherwise the token is valid and we should just return the user
+    return session
   }
 }
