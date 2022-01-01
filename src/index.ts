@@ -123,6 +123,6 @@ export class SupabaseStrategy extends
     if (!session)
       return this.handleResult(req, sessionStorage, options, 'No session data found', true)
 
-    return this.handleResult(req, sessionStorage, options, { ...cookie?.[options?.sessionKey], user: session }, false)
+    return this.handleResult(req, sessionStorage, options, { ...cookie?.[options?.sessionKey], user: session?.user }, false)
   }
 }
