@@ -133,8 +133,8 @@ describe('[external export] revalidate', async() => {
       req,
       sessionStorage,
       {
-        sessionKey: 'sb:session',
-        sessionErrorKey: 'sb:error',
+        sessionKey: 'session',
+        sessionErrorKey: 'error',
         failureRedirect: '/login',
       },
     )

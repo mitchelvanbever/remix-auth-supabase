@@ -106,13 +106,13 @@ export class SupabaseStrategy extends
   async checkSession(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions) {
     const cookie = await this.extractSession(req, sessionStorage)
 
-    if (!cookie?.session?.refresh_token || !cookie?.session?.access_token)
+    if (!cookie?.[options?.sessionKey]?.refresh_token || !cookie?.[options?.sessionKey]?.access_token)
       return this.handleResult(req, sessionStorage, options, 'No session data found', true)
 
-    const session = await this.getUser(cookie?.session?.access_token)
+    const session = await this.getUser(cookie?.[options?.sessionKey]?.access_token)
 
     if (!session || session?.error) {
-      const [data, error] = await handlePromise(this.handleRefreshToken(cookie?.session?.refresh_token))
+      const [data, error] = await handlePromise(this.handleRefreshToken(cookie?.[options?.sessionKey]?.refresh_token))
 
       if (!data?.data || data?.error || error)
         return this.handleResult(req, sessionStorage, options, 'No session data found', true)
@@ -123,6 +123,6 @@ export class SupabaseStrategy extends
     if (!session)
       return this.handleResult(req, sessionStorage, options, 'No session data found', true)
 
-    return this.handleResult(req, sessionStorage, options, session, false)
+    return this.handleResult(req, sessionStorage, options, { ...cookie?.[options?.sessionKey], user: session }, false)
   }
 }

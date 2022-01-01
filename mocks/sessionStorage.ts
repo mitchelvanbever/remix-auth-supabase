@@ -7,7 +7,7 @@ export const sessionStorage = createCookieSessionStorage({
     secure: true,
     httpOnly: true,
     sameSite: 'lax',
-    name: 'supabase',
+    name: 'sb',
     secrets: ['s3cr3t'],
     maxAge: 60 * 60, // 1 hour
   },
