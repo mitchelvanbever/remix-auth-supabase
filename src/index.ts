@@ -117,12 +117,13 @@ export class SupabaseStrategy extends
       if (!res?.data || res?.error || error)
         return this.handleResult(req, sessionStorage, options, 'Could not refresh session', true)
 
-      return this.success(res.data, req, sessionStorage, { ...options, successRedirect: options?.successRedirect ?? '' })
+      // flash new data
+      return this.success(res.data, req, sessionStorage, { ...options, successRedirect: options?.successRedirect ?? '/' })
     }
 
     if (!session)
       return this.handleResult(req, sessionStorage, options, 'No session data found', true)
 
-    return this.handleResult(req, sessionStorage, options, { ...cookie?.[options?.sessionKey], user: session?.user }, false)
+    return this.handleResult(req, sessionStorage, options, { ...cookie?.[options?.sessionKey], ...session?.user }, false)
   }
 }

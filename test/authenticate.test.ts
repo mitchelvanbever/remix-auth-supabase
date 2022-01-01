@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { authenticator } from '../mocks/authenticator'
 import { password, user } from '../mocks/user'
+import { validResponse } from '../mocks/handlers'
 
 describe('authenticate', async() => {
   it('should handle faulty requests', async() => {
@@ -15,10 +16,7 @@ describe('authenticate', async() => {
         method: 'POST',
         body: fData,
       },
-    ),
-    ).catch(async e =>
-      expect(e?.message).toEqual('Need a valid email and/or password'),
-    )
+    )).catch(async e => expect(e?.message).toEqual('Need a valid email and/or password'))
   })
   it('should handle wrong credentials', async() => {
     const fData = new FormData()
@@ -31,10 +29,7 @@ describe('authenticate', async() => {
         method: 'POST',
         body: fData,
       },
-    ),
-    ).catch(async e =>
-      expect(await e.json()).toEqual({ message: 'Wrong email or password' }),
-    )
+    )).catch(async e => expect(await e.json()).toEqual({ message: 'Wrong email or password' }))
   })
   it('should sign in and return the user', async() => {
     const fData = new FormData()
@@ -48,7 +43,6 @@ describe('authenticate', async() => {
         method: 'POST',
         body: fData,
       },
-    ),
-    ).then(res => expect(res?.user?.email).toBe(user.email))
+    )).then(res => expect(res).toEqual(validResponse))
   })
 })
