@@ -1,6 +1,6 @@
 {
   "name": "@afaik/remix-auth-supabase-strategy",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "repository": {
     "url": "https://github.com/mitchelvanbever/remix-auth-supabase-strategy"
   },
