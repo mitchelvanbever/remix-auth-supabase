@@ -112,12 +112,12 @@ export class SupabaseStrategy extends
     const session = await this.getUser(cookie?.[options?.sessionKey]?.access_token)
 
     if (!session || session?.error) {
-      const [data, error] = await handlePromise(this.handleRefreshToken(cookie?.[options?.sessionKey]?.refresh_token))
+      const [res, error] = await handlePromise(this.handleRefreshToken(cookie?.[options?.sessionKey]?.refresh_token))
 
-      if (!data?.data || data?.error || error)
-        return this.handleResult(req, sessionStorage, options, 'No session data found', true)
+      if (!res?.data || res?.error || error)
+        return this.handleResult(req, sessionStorage, options, 'Could not refresh session', true)
 
-      return this.success(data.data, req, sessionStorage, options)
+      return this.success(res.data, req, sessionStorage, { ...options, successRedirect: options?.successRedirect ?? '' })
     }
 
     if (!session)
