@@ -69,7 +69,7 @@ describe('authenticate', async() => {
       },
     ),
     ).catch(async e =>
-      expect(await e.json()).toEqual({ message: 'Need a valid email and/or password' }),
+      expect(e?.message).toEqual('Need a valid email and/or password'),
     )
   })
   it('should handle wrong credentials', async() => {
@@ -85,7 +85,8 @@ describe('authenticate', async() => {
       },
     ),
     ).catch(async e =>
-      expect(await e.json()).toEqual({ message: 'Wrong email or password' }))
+      expect(await e.json()).toEqual({ message: 'Wrong email or password' }),
+    )
   })
   it('should sign in and return the user', async() => {
     const fData = new FormData()
