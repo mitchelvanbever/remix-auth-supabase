@@ -1,8 +1,10 @@
+/* eslint-disable brace-style */
 import type { SessionStorage } from '@remix-run/server-runtime'
-import type { Session, SupabaseClient, SupabaseClientOptions } from '@supabase/supabase-js'
+import type { ApiError, Session, SupabaseClient, SupabaseClientOptions, User } from '@supabase/supabase-js'
 import { createClient } from '@supabase/supabase-js'
-import type { AuthenticateOptions } from 'remix-auth'
+import type { AuthenticateOptions, StrategyVerifyCallback } from 'remix-auth'
 import { Strategy } from 'remix-auth'
+import { handlePromise } from './handlePromise'
 
 /**
  * This interface declares what configuration the strategy needs from the
@@ -27,13 +29,18 @@ export interface MyStrategyOptions {
   supabaseOptions?: SupabaseClientOptions
 }
 
-export class SupabaseStrategy extends Strategy<Partial<Session>, never> {
-  readonly name = 'SUPABASE_AUTH'
+export interface VerifyParams {
+  form?: FormData
+}
+
+export class SupabaseStrategy extends
+  Strategy<Session, VerifyParams> {
+  name = 'sb'
   private supabaseClient: SupabaseClient
 
   constructor(
     options: MyStrategyOptions,
-    verify: never,
+    verify: StrategyVerifyCallback<Session, VerifyParams>,
   ) {
     super(verify)
 
@@ -51,18 +58,71 @@ export class SupabaseStrategy extends Strategy<Partial<Session>, never> {
     req: Request,
     sessionStorage: SessionStorage,
     options: AuthenticateOptions,
-  ): Promise<Partial<Session>> {
-    const formData = await req.formData()
-    const email = formData.get('email')
-    const password = formData.get('password')
-    if (!email || typeof email !== 'string' || !password || typeof password !== 'string')
-      return this.failure('Need a valid email and/or password', req, sessionStorage, options)
+  ): Promise<Session> {
+    const params: VerifyParams = { form: await req.formData() }
 
-    return this.supabaseClient.auth.api.signInWithEmail(email, password).then((res) => {
-      if (res?.error || !res.data)
-        return this.failure(res?.error?.message ?? 'No user found', req, sessionStorage, options)
+    const [data, error] = await handlePromise(this.verify(params))
 
-      return this.success(res?.data, req, sessionStorage, options)
-    })
+    if (error || !data)
+      return this.failure((error as Error)?.message ?? 'No user found', req, sessionStorage, options)
+
+    return this.success(data, req, sessionStorage, options)
+  }
+
+  private async extractSession(req: Request, sessionStorage: SessionStorage) {
+    return (await sessionStorage.getSession(req.headers.get('Cookie')))?.data
+  }
+
+  private async getUser(accessToken: string): Promise<{
+    user: User | null
+    data: User | null
+    error: ApiError | null
+  } | undefined> {
+    return (await handlePromise(this.supabaseClient.auth.api.getUser(accessToken)))[0]
+  }
+
+  private async handleRefreshToken(refreshToken: string): Promise<{
+    data: Session | null
+    error: ApiError | null
+  }> {
+    const [data, error] = await handlePromise(this.supabaseClient.auth.api.refreshAccessToken(refreshToken))
+
+    if (error || !data)
+      throw new Error('Error refreshing access token')
+
+    return data
+  }
+
+  protected async handleResult(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions, result: any, hasErrored: boolean) {
+    if (options.failureRedirect && hasErrored)
+      return this.failure(result, req, sessionStorage, options)
+
+    if (options.successRedirect && !hasErrored)
+      return this.success(result, req, sessionStorage, options)
+
+    return result
+  }
+
+  async checkSession(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions) {
+    const cookie = await this.extractSession(req, sessionStorage)
+
+    if (!cookie?.session?.refresh_token || !cookie?.session?.access_token)
+      return this.handleResult(req, sessionStorage, options, 'No session data found', true)
+
+    const session = await this.getUser(cookie?.session?.access_token)
+
+    if (!session || session?.error) {
+      const [data, error] = await handlePromise(this.handleRefreshToken(cookie?.session?.refresh_token))
+
+      if (!data?.data || data?.error || error)
+        return this.handleResult(req, sessionStorage, options, 'No session data found', true)
+
+      return this.success(data.data, req, sessionStorage, options)
+    }
+
+    if (!session)
+      return this.handleResult(req, sessionStorage, options, 'No session data found', true)
+
+    return this.handleResult(req, sessionStorage, options, session, false)
   }
 }
