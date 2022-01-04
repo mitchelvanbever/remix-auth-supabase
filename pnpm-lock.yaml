@@ -16,7 +16,7 @@ specifiers:
   formdata-polyfill: ^4.0.10
   msw: ^0.36.3
   react: ^17.0.2
-  remix-auth: ^3.0.0
+  remix-auth: ^3.1.0
   typescript: ^4.3.5
   vite: ^2.7.6
   vitest: ^0.0.131
