@@ -6,5 +6,7 @@ export const req = new Request('')
 export const authenticatedReq = async(init: Request = req, cookieInit?: CookieInit) => {
   const res = await getResWithSession(init, cookieInit)
 
-  return new Request('', { headers: { Cookie: res.headers.get('Cookie') } })
+  const headersInit: HeadersInit | undefined = res?.headers?.get('Cookie') ? { Cookie: res.headers.get('Cookie') as string } : undefined
+
+  return new Request('', { headers: headersInit })
 }

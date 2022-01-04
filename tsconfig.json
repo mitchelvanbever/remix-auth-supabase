@@ -1,16 +1,22 @@
 {
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
-    "esModuleInterop": true,
-    "moduleResolution": "Node",
-    "module": "CommonJS",
-    "target": "ES2019",
     "strict": true,
-    "skipLibCheck": true,
-    "declaration": true,
+    "allowJs": false,
     "jsx": "react-jsx",
-    "outDir": "./build"
+    "module": "ESNext",
+    "target": "ESNext",
+    "declaration": true,
+    "outDir": "./build",
+    "skipLibCheck": false,
+    "isolatedModules": true,
+    "esModuleInterop": false,
+    "resolveJsonModule": true,
+    "moduleResolution": "Node",
+    "types": ["vitest/global"],
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
   },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": ["./src"]
 }

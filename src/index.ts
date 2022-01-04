@@ -30,7 +30,7 @@ export interface MyStrategyOptions {
 }
 
 export interface VerifyParams {
-  form?: FormData
+  req: Request
 }
 
 export class SupabaseStrategy extends
@@ -59,7 +59,7 @@ export class SupabaseStrategy extends
     sessionStorage: SessionStorage,
     options: AuthenticateOptions,
   ): Promise<Session> {
-    const params: VerifyParams = { form: await req.formData() }
+    const params: VerifyParams = { req }
 
     const [data, error] = await handlePromise(this.verify(params))
 

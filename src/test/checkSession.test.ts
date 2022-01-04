@@ -1,12 +1,9 @@
-import { describe, expect, it } from 'vitest'
-
 import { user } from '../mocks/user'
 import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
 import { SESSION_ERROR_KEY, SESSION_KEY } from '../mocks/constants'
 import { validResponse } from '../mocks/handlers'
-import { getSessionFromCookie } from './utils'
 
 describe('[external export] revalidate', async() => {
   it('should redirect if cookie is not set', async() => {

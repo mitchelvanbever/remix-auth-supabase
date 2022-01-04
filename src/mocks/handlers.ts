@@ -19,7 +19,7 @@ export const handlers = [
     return res(ctx.status(200), ctx.json(validResponse))
   }),
   rest.get('http://supabase-url.com/supabase-project/auth/v1/user', async(req, res, ctx) => {
-    const token = req.headers.get('authorization').split('Bearer ')[1]
+    const token = req.headers.get('authorization')?.split('Bearer ')?.[1]
 
     if (token !== 'valid') return res(ctx.status(401), ctx.json({ error: 'Token expired', user: null }))
     return res(ctx.status(200), ctx.json({ user }))
