@@ -5,7 +5,6 @@ import { validResponse } from '../mocks/handlers'
 describe('authenticate', async() => {
   it('should handle faulty requests', async() => {
     const fData = new FormData()
-    fData.append('password', password)
 
     expect.assertions(1)
 
@@ -14,7 +13,7 @@ describe('authenticate', async() => {
         method: 'POST',
         body: fData,
       },
-    )).catch(async e => expect(e?.message).toEqual('Need a valid email and/or password'))
+    )).catch(async e => expect((await e.json())?.message).toEqual('Need a valid email and/or password'))
   })
   it('should handle wrong credentials', async() => {
     const fData = new FormData()

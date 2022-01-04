@@ -9,6 +9,7 @@ const verify = async({ req }: { req: Request }) => {
   const form = await req.formData()
   const email = form.get('email')
   const password = form.get('password')
+
   if (!email || typeof email !== 'string' || !password || typeof password !== 'string')
     throw new Error('Need a valid email and/or password')
 
