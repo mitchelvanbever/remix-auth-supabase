@@ -5,7 +5,7 @@ import { validResponse } from '../mocks/handlers'
 describe('authenticate', async() => {
   it('should handle faulty requests', async() => {
     const fData = new FormData()
-    fData.append('email', user.email!)
+    fData.append('password', password)
 
     expect.assertions(1)
 

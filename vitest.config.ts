@@ -6,9 +6,10 @@ export default defineConfig({
   test: {
     global: true,
     environment: 'node',
-    setupFiles: ['./test/setup.ts'],
+    setupFiles: ['./src/test/setup.ts'],
     coverage: {
       reporter: ['text', 'json', 'html'],
+      exclude: ['./src/mocks', './src/test'],
     },
   },
 })
