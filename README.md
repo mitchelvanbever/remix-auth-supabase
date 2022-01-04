@@ -65,8 +65,9 @@ export const supabaseStrategy = new SupabaseStrategy(
     supabaseOptions,
     supabaseKey: supabaseAnonKey,
   },
-  // simple verify example for email/password auth
-  ({ form }) => {
+  async ({ req }) => {
+    // simple verify example for email/password auth
+    const form = await req.formData()
     const email = form?.get('email')
     const password = form?.get('password')
     if (!email || typeof email !== 'string' || !password || typeof password !== 'string')
