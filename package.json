@@ -41,7 +41,7 @@
     "@remix-run/server-runtime": "^1.0.0",
     "@types/faker": "^5.5.9",
     "@types/react": "^17.0.38",
-    "@vitest/ui": "^0.0.131",
+    "@vitest/ui": "^0.0.133",
     "c8": "^7.10.0",
     "eslint": "^7.26.0",
     "faker": "5.5.3",
@@ -50,7 +50,7 @@
     "react": "^17.0.2",
     "typescript": "^4.3.5",
     "vite": "^2.7.6",
-    "vitest": "^0.0.131"
+    "vitest": "^0.0.133"
   },
   "dependencies": {
     "@supabase/supabase-js": "^1.29.1",

@@ -3,7 +3,7 @@
     "strict": true,
     "allowJs": false,
     "jsx": "react-jsx",
-    "module": "ESNext",
+    "module": "commonJS",
     "target": "ESNext",
     "declaration": true,
     "outDir": "./build",
