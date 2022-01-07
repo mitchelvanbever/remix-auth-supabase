@@ -1,4 +1,4 @@
-# Remix Auth - Supabase Strategy
+****# Remix Auth - Supabase Strategy
 
 > Strategy for using supabase with Remix Auth
 
@@ -19,18 +19,21 @@ The way remix-auth (and it's templates) are designed was not a direct fit for wh
 It Supports the following:
 * Multiple authentication strategies thanks to remix-auth and the verify method (more on this later)
 * User object, access_tokens and refresh_tokens are stored in a cookie
-* `checkSession` method to protect routes and handle refreshing of tokens (if expired)
+* `checkSession` method to protect routes (like `authenticator.isAuthenticated`) and **handle refreshing of tokens** (if expired)
 
 ## How to use
 
-Install the package (and remix-auth)
+### Install the package (and remix-auth)
 * `yarn add remix-auth @afaik/remix-auth-supabase-strategy`
 * `pnpm install remix-auth @afaik/remix-auth-supabase-strategy`
 * `npm install remix-auth @afaik/remix-auth-supabase-strategy`
 
+### Breaking change v2 to v3
+See [Set up a file to export the authenticator(s) and strategy](#set-up-a-file-to-export-the-authenticator-and-strategy)
 
-First setup the sessionStorage
+### Setup the sessionStorage
 ```js
+// app/services/session.server.ts
 import { createCookieSessionStorage } from 'remix'
 
 export const sessionStorage = createCookieSessionStorage({
@@ -49,23 +52,23 @@ export const sessionStorage = createCookieSessionStorage({
 })
 ```
 
-Set up a file to export the authenticator(s) and strategy (i.e: `~/auth.server.ts`)
+### Set up a file to export the authenticator and strategy
 ```js
 // app/auth.server.ts
 import type { Session } from '@supabase/supabase-js'
 import { Authenticator } from 'remix-auth'
 import { SupabaseStrategy } from '@afaik/remix-auth-supabase-strategy'
-import { supabase, supabaseOptions } from '~/utils/supabase'
-import { supabaseAnonKey, supabaseUrl } from '~/config'
+import { supabase } from '~/utils/supabase'
 import { sessionStorage } from '~/session.server'
 
 export const supabaseStrategy = new SupabaseStrategy(
   {
-    supabaseUrl,
-    supabaseOptions,
-    supabaseKey: supabaseAnonKey,
+      supabaseClient: supabase,
+      sessionStorage,
+      sessionKey: 'sb:session', // if not set, default is sb:session
+      sessionErrorKey: 'sb:error', // if not set, default is sb:error
   },
-  async ({ req }) => {
+  async ({ req, supabaseClient }) => {
     // simple verify example for email/password auth
     const form = await req.formData()
     const email = form?.get('email')
@@ -73,7 +76,7 @@ export const supabaseStrategy = new SupabaseStrategy(
     if (!email || typeof email !== 'string' || !password || typeof password !== 'string')
       throw new Error('Need a valid email and/or password')
 
-    return supabase.auth.api.signInWithEmail(email, password).then((res) => {
+    return supabaseClient.auth.api.signInWithEmail(email, password).then((res) => {
       if (res?.error || !res.data)
         throw new Error(res?.error?.message ?? 'No user found')
 
@@ -85,51 +88,119 @@ export const supabaseStrategy = new SupabaseStrategy(
 export const authenticator = new Authenticator<Session>(
   sessionStorage,
   {
-    sessionKey: 'sb:session',
-    sessionErrorKey: 'sb:error'
+      sessionKey: supabaseStrategy.sessionKey, // keep in sync
+      sessionErrorKey: supabaseStrategy.sessionErrorKey, // keep in sync
   })
 
 authenticator.use(supabaseStrategy)
 ```
 
-`~/routes/login.ts`
+### Use SupabaseStrategy to check user session and auto refresh token 🚀
+> `checkSession` works like `authenticator.isAuthenticated` but **handles token refresh**
+
 ```js
-export const loader: LoaderFunction = async({ request }) =>
-  supabaseStrategy.checkSession(
-    request,
-    sessionStorage,
-    {
-      sessionKey: 'sb:session',
-      sessionErrorKey: 'sb:error',
-      successRedirect: '/profile',
-    })
+// app/routes/login.ts
+export const loader: LoaderFunction = async({ request }) => {
+    // If the user is already authenticated, redirect to /profile directly
+    const session = supabaseStrategy.checkSession(request, {
+        successRedirect: '/profile'
+    });
+    
+    if (!session) {
+        // If the user is not authenticated, you can do something or nothing
+        // If you do nothing, /profile page is display
+    }
+}
 
 export const action: ActionFunction = async({ request }) =>
   authenticator.authenticate('sb', request, {
     successRedirect: '/profile',
     failureRedirect: '/login',
   })
+
+export default function LoginPage() {
+    return (
+        <Form method="post">
+            <input type="email" name="email" required />
+            <input
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                required
+            />
+            <button>Sign In</button>
+        </Form>
+    );
+}
 ```
 
-`~/routes/profile.ts`
 ```js
-export const loader: LoaderFunction = async({ request }) =>
-  supabaseStrategy.checkSession(
-    request,
-    sessionStorage,
-    {
-      sessionKey: 'sb:session',
-      sessionErrorKey: 'sb:error',
-      failureRedirect: '/login',
-    })
-
-// handle logout action
-export const action: ActionFunction = async({ request }) => {
-  const session = await sessionStorage.getSession(request.headers.get('Cookie'))
-  return redirect('/', {
-    headers: {
-      'Set-Cookie': await sessionStorage.destroySession(session),
-    },
-  })
+// app/routes/profile.ts
+export const loader: LoaderFunction = async({ request }) => {
+    // If token refresh and successRedirect not set, reload the current route
+    return supabaseStrategy.checkSession(
+        request,
+        {
+            failureRedirect: '/login',
+        })
 }
+  
+
+// Handle logout action
+export const action: ActionFunction = async({ request }) => {
+    await authenticator.logout(request, { redirectTo: "/login" });
+}
+```
+
+##### Get session or redirect
+```js
+// Get the session data or redirect to /login if it failed
+// If token is refreshing and successRedirect not set, it reloads the current route
+const session = await supabaseStrategy.checkSession(request, {
+    failureRedirect: "/login",
+});
+```
+
+##### Redirect if authenticated
+```js
+// If the user is authenticated, redirect to /profile
+await supabaseStrategy.checkSession(request, {
+    successRedirect: "/profile",
+});
+```
+
+##### Get session or null : decide what to do
+```js
+// Get the session or null, and do different things in your loader/action based on
+// the result
+const session = await supabaseStrategy.checkSession(request);
+if (session) {
+    // Here the user is authenticated
+} else {
+    // Here the user is not authenticated
+}
+```
+
+
+### Tips
+#### Prevent infinite loop 😱
+```js
+// app/routes/login.ts
+export const loader: LoaderFunction = async({ request }) => {
+    // Beware, never set failureRedirect equals to the current route
+    const session = supabaseStrategy.checkSession(request, {
+        successRedirect: '/profile',
+        failureRedirect: "/login", // ❌ DONT'T : infinite loop
+    });
+    
+    // In this example, session is always null otherwise it would have been redirected
+}
+
+export const action: ActionFunction = async({ request }) =>
+  authenticator.authenticate('sb', request, {
+    successRedirect: '/profile',
+    failureRedirect: '/login',
+  })
+
+export default function LoginPage() { /* code */}
 ```

@@ -16,7 +16,7 @@ specifiers:
   formdata-polyfill: ^4.0.10
   msw: ^0.36.3
   react: ^17.0.2
-  remix-auth: ^3.1.0
+  remix-auth: ^3.2.1
   typescript: ^4.3.5
   vite: ^2.7.6
   vitest: ^0.0.133
@@ -24,7 +24,7 @@ specifiers:
 dependencies:
   '@supabase/supabase-js': 1.29.1
   add: 2.0.6
-  remix-auth: 3.1.0_969815ef34664ca7c9cb8a3408473b97
+  remix-auth: 3.2.1_969815ef34664ca7c9cb8a3408473b97
 
 devDependencies:
   '@antfu/eslint-config': 0.14.2_eslint@7.32.0+typescript@4.5.4
@@ -3199,8 +3199,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /remix-auth/3.1.0_969815ef34664ca7c9cb8a3408473b97:
-    resolution: {integrity: sha512-KWBLV5pr0jOCuXjhZp1LHEtG9SR1SuLLzkI9MZuzg/un6P6edA9EKzT5LMQRHGoyiRDZ100wgMj8Dd0mw6950A==}
+  /remix-auth/3.2.1_969815ef34664ca7c9cb8a3408473b97:
+    resolution: {integrity: sha512-5N5ZjKCYGjbRmMi9PQwngKuuGkBEfny0Q4iXyTrDxQhSzAbQ/+wHX+ZKGdneYWHULZJCRZbjSmyrjk/rJxGFlw==}
     peerDependencies:
       '@remix-run/react': ^1.0.0
       '@remix-run/server-runtime': ^1.0.0

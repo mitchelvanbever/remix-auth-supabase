@@ -44,10 +44,11 @@ export interface VerifyParams {
 export class SupabaseStrategy extends
   Strategy<Session, VerifyParams> {
   name = 'sb'
+  readonly sessionKey: string
+  readonly sessionErrorKey: string
+
   private readonly supabaseClient: SupabaseClient
   private readonly sessionStorage: SessionStorage
-  private readonly sessionKey: string
-  private readonly sessionErrorKey: string
 
   constructor(
     options: SupabaseStrategyOptions,
