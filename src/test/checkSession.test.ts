@@ -2,38 +2,30 @@ import { user } from '../mocks/user'
 import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
-import { SESSION_ERROR_KEY, SESSION_KEY } from '../mocks/constants'
+import { SESSION_KEY } from '../mocks/constants'
 import { validResponse } from '../mocks/handlers'
 
 describe('[external export] revalidate', async() => {
   it('should redirect if cookie is not set', async() => {
     expect.assertions(1)
-    await supabaseStrategy.checkSession(new Request(''), sessionStorage,
+    await supabaseStrategy.checkSession(new Request(''),
       {
-        sessionKey: SESSION_KEY,
         failureRedirect: '/login',
-        sessionErrorKey: SESSION_ERROR_KEY,
       },
     ).catch(res => expect(res.status).toBe(302))
   })
   it('should return null if no cookie is set', async() => {
     expect.assertions(1)
-    await supabaseStrategy.checkSession(new Request(''), sessionStorage,
-      {
-        sessionKey: SESSION_KEY,
-        sessionErrorKey: SESSION_ERROR_KEY,
-      },
-    ).then(res => expect(res).toBe('No session data found'))
+    await supabaseStrategy.checkSession(new Request(''),
+    ).then(res => expect(res).toBe(null))
   })
   it('should redirect if cookie is set', async() => {
     expect.assertions(2)
     const req = await authenticatedReq()
 
-    await supabaseStrategy.checkSession(req, sessionStorage,
+    await supabaseStrategy.checkSession(req,
       {
-        sessionKey: SESSION_KEY,
         successRedirect: '/login',
-        sessionErrorKey: SESSION_ERROR_KEY,
       },
     ).catch(async(res) => {
       // should check if the headers are being flashed
@@ -45,32 +37,56 @@ describe('[external export] revalidate', async() => {
     expect.assertions(1)
     const req = await authenticatedReq()
 
-    await supabaseStrategy.checkSession(req, sessionStorage,
+    await supabaseStrategy.checkSession(req,
       {
-        sessionKey: SESSION_KEY,
         failureRedirect: '/login',
-        sessionErrorKey: SESSION_ERROR_KEY,
       },
     ).then(session => expect(session).toEqual(validResponse))
   })
+  it('should return null if refresh token fails', async() => {
+    expect.assertions(1)
+    const req = await authenticatedReq(new Request('https://localhost'),
+      {
+        user,
+        access_token: 'expired',
+        refresh_token: 'invalid',
+      })
+
+    await supabaseStrategy.checkSession(req,
+    ).then(res => expect(res).toBe(null))
+  })
   it('should refresh the token with a valid refresh token', async() => {
-    expect.assertions(2)
-    const req = await authenticatedReq(new Request(''),
+    expect.assertions(3)
+    const req = await authenticatedReq(new Request('https://localhost/profile'),
       {
         user,
         access_token: 'expired',
         refresh_token: 'valid',
       })
 
-    await supabaseStrategy.checkSession(req, sessionStorage,
-      {
-        sessionKey: SESSION_KEY,
-        sessionErrorKey: SESSION_ERROR_KEY,
-      },
+    await supabaseStrategy.checkSession(req,
     ).catch(async(error) => {
       const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
       expect(cookies?.[SESSION_KEY]).toEqual(validResponse)
       expect(error.status).toEqual(302)
+      expect(error.headers.get('Location')).toEqual('/profile')
+    })
+  })
+  it('should refresh the token with a valid refresh token and redirect is successRedirect is set', async() => {
+    expect.assertions(3)
+    const req = await authenticatedReq(new Request('https://localhost'),
+      {
+        user,
+        access_token: 'expired',
+        refresh_token: 'valid',
+      })
+
+    await supabaseStrategy.checkSession(req, { successRedirect: '/dashboard' },
+    ).catch(async(error) => {
+      const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
+      expect(cookies?.[SESSION_KEY]).toEqual(validResponse)
+      expect(error.status).toEqual(302)
+      expect(error.headers.get('Location')).toEqual('/dashboard')
     })
   })
 })

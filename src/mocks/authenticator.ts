@@ -2,11 +2,11 @@ import type { AuthSession } from '@supabase/supabase-js'
 import { Authenticator } from 'remix-auth'
 import type { VerifyParams } from '..'
 import { SupabaseStrategy } from '..'
-import { SESSION_ERROR_KEY, SESSION_KEY, SUPABASE_KEY, SUPABASE_URL } from './constants'
+import { SESSION_ERROR_KEY, SESSION_KEY } from './constants'
 import { sessionStorage } from './sessionStorage'
 import { supabaseClient } from './supabase'
 
-const verify = async({ req }: VerifyParams) => {
+const verify = async({ req, supabaseClient }: VerifyParams) => {
   const form = await req.formData()
   const email = form.get('email')
   const password = form.get('password')
@@ -21,8 +21,8 @@ const verify = async({ req }: VerifyParams) => {
 }
 
 export const supabaseStrategy = new SupabaseStrategy({
-  supabaseUrl: SUPABASE_URL,
-  supabaseKey: SUPABASE_KEY,
+  supabaseClient,
+  sessionStorage,
 }, verify)
 
 export const authenticator = new Authenticator<AuthSession>(

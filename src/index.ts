@@ -1,57 +1,71 @@
 /* eslint-disable brace-style */
 import type { SessionStorage } from '@remix-run/server-runtime'
-import type { ApiError, Session, SupabaseClient, SupabaseClientOptions, User } from '@supabase/supabase-js'
-import { createClient } from '@supabase/supabase-js'
+import type { ApiError, Session, SupabaseClient, User } from '@supabase/supabase-js'
 import type { AuthenticateOptions, StrategyVerifyCallback } from 'remix-auth'
 import { Strategy } from 'remix-auth'
 import { handlePromise } from './handlePromise'
 
-/**
- * This interface declares what configuration the strategy needs from the
- * developer to correctly work.
- */
-export interface MyStrategyOptions {
+export interface SupabaseStrategyOptions {
   /**
-   * @param supabaseUrl
-   * @description supabase url used to init supabaseClient
+   * @param {SupabaseClient} supabaseClient
+   * @description Supabase instance
    */
-  supabaseUrl: string
+  readonly supabaseClient: SupabaseClient
   /**
-   * @param supabaseKey
-   * @description supabase key used to init supabaseClient
+   * @param {SessionStorage} sessionStorage
+   * @description Session storage instance
    */
-  supabaseKey: string
+  readonly sessionStorage: SessionStorage
   /**
-   * @param supabaseOptions
-   * @description supabase options used to init supabaseClient
-   * @remark supabase options should be provided accordingly (CF-workers needs options).
+   * @param {string?} sessionKey
+   * @description Session key, **default is `sb:session`**
    */
-  supabaseOptions?: SupabaseClientOptions
+  readonly sessionKey?: string
+  /**
+   * @param {string?} sessionErrorKey
+   * @description Session error key, **default is `sb:error`**
+   */
+  readonly sessionErrorKey?: string
 }
 
 export interface VerifyParams {
-  req: Request
+  /**
+   * @param {Request} req
+   * @description Request provided by remix-auth Authenticator
+   */
+  readonly req: Request
+  /**
+   * @param {SupabaseClient} supabaseClient
+   * @description Supabase instance provided by SupabaseStrategy
+   */
+  readonly supabaseClient: SupabaseClient
 }
 
 export class SupabaseStrategy extends
   Strategy<Session, VerifyParams> {
   name = 'sb'
-  private supabaseClient: SupabaseClient
+  private readonly supabaseClient: SupabaseClient
+  private readonly sessionStorage: SessionStorage
+  private readonly sessionKey: string
+  private readonly sessionErrorKey: string
 
   constructor(
-    options: MyStrategyOptions,
+    options: SupabaseStrategyOptions,
     verify: StrategyVerifyCallback<Session, VerifyParams>,
   ) {
+    if (!options?.supabaseClient)
+      throw new Error('SupabaseStrategy : Constructor expected to receive a supabase client instance. Missing options.supabaseClient')
+    if (!options?.sessionStorage)
+      throw new Error('SupabaseStrategy : Constructor expected to receive a session storage instance. Missing options.sessionStorage')
+    if (!verify)
+      throw new Error('SupabaseStrategy : Constructor expected to receive a verify function. Missing verify')
+
     super(verify)
 
-    if (!options?.supabaseUrl || !options?.supabaseKey)
-      throw new Error('Expected to receive a supabase URL and a supabase key')
-
-    this.supabaseClient = createClient(
-      options.supabaseUrl,
-      options.supabaseKey,
-      options?.supabaseOptions ?? {},
-    )
+    this.supabaseClient = options.supabaseClient
+    this.sessionStorage = options.sessionStorage
+    this.sessionKey = options.sessionKey ?? 'sb:session'
+    this.sessionErrorKey = options.sessionErrorKey ?? 'sb:error'
   }
 
   async authenticate(
@@ -59,18 +73,12 @@ export class SupabaseStrategy extends
     sessionStorage: SessionStorage,
     options: AuthenticateOptions,
   ): Promise<Session> {
-    const params: VerifyParams = { req }
-
-    const [data, error] = await handlePromise(this.verify(params))
+    const [data, error] = await handlePromise(this.verify({ req, supabaseClient: this.supabaseClient }))
 
     if (error || !data)
       return this.failure((error as Error)?.message ?? 'No user found', req, sessionStorage, options)
 
     return this.success(data, req, sessionStorage, options)
-  }
-
-  private async extractSession(req: Request, sessionStorage: SessionStorage) {
-    return (await sessionStorage.getSession(req.headers.get('Cookie')))?.data
   }
 
   private async getUser(accessToken: string): Promise<{
@@ -93,37 +101,58 @@ export class SupabaseStrategy extends
     return data
   }
 
-  protected async handleResult(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions, result: any, hasErrored: boolean) {
+  protected async handleResult(req: Request, options: AuthenticateOptions, result: any, hasErrored = false) {
     if (options.failureRedirect && hasErrored)
-      return this.failure(result, req, sessionStorage, options)
+      return this.failure(result, req, this.sessionStorage, options)
+
+    if (hasErrored)
+      return null
 
     if (options.successRedirect && !hasErrored)
-      return this.success(result, req, sessionStorage, options)
+      return this.success(result, req, this.sessionStorage, options)
 
     return result
   }
 
-  async checkSession(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions) {
-    const cookie = await this.extractSession(req, sessionStorage)
+  async checkSession(req: Request, checkOptions: {
+    successRedirect: string
+    failureRedirect?: never
+  }): Promise<null>
 
-    if (!cookie?.[options?.sessionKey]?.refresh_token || !cookie?.[options?.sessionKey]?.access_token)
-      return this.handleResult(req, sessionStorage, options, 'No session data found', true)
+  async checkSession(req: Request, checkOptions: {
+    successRedirect?: never
+    failureRedirect: string
+  }): Promise<Session>
 
-    const session = await this.getUser(cookie?.[options?.sessionKey]?.access_token)
+  async checkSession(req: Request, checkOptions?: {
+    successRedirect?: never
+    failureRedirect?: never
+  }): Promise<Session | null>
 
-    if (!session || session?.error) {
-      const [res, error] = await handlePromise(this.handleRefreshToken(cookie?.[options?.sessionKey]?.refresh_token))
+  async checkSession(req: Request, checkOptions:
+  | { successRedirect?: never; failureRedirect?: never }
+  | { successRedirect: string; failureRedirect?: never }
+  | { successRedirect?: never; failureRedirect: string } = {}): Promise<Session | null> {
+    const sessionCookie = await this.sessionStorage.getSession(req.headers.get('Cookie'))
+    const session: Session | null = sessionCookie.get(this.sessionKey)
+    const options = { sessionKey: this.sessionKey, sessionErrorKey: this.sessionErrorKey, ...checkOptions }
+
+    if (!session?.refresh_token || !session?.access_token)
+      return this.handleResult(req, options, 'No session data found', true)
+
+    const user = await this.getUser(session.access_token)
+
+    if (!user || user?.error) {
+      const [res, error] = await handlePromise(this.handleRefreshToken(session.refresh_token))
 
       if (!res?.data || res?.error || error)
-        return this.handleResult(req, sessionStorage, options, 'Could not refresh session', true)
+        return this.handleResult(req, options, 'Could not refresh session', true)
 
       // flash new data
-      return this.success(res.data, req, sessionStorage, { ...options, successRedirect: options?.successRedirect ?? '/' })
+      const currentPath = new URL(req.url).pathname
+      return this.success(res.data, req, this.sessionStorage, { ...options, successRedirect: options?.successRedirect ?? currentPath })
     }
 
-    if (!session)
-      return this.handleResult(req, sessionStorage, options, 'No session data found', true)
-
-    return this.handleResult(req, sessionStorage, options, { ...cookie?.[options?.sessionKey], ...session?.user }, false)
+    return this.handleResult(req, options, session)
   }
 }
