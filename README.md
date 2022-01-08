@@ -204,3 +204,59 @@ export const action: ActionFunction = async({ request }) =>
 
 export default function LoginPage() { /* code */}
 ```
+
+#### Redirect to
+> With Remix.run it's easy to add super UX
+```js
+// app/routes/profile.ts
+export const loader: LoaderFunction = async({ request }) =>
+    // If checkSession fails, redirect to login and go back here when authenticated
+    supabaseStrategy.checkSession(request, {
+        failureRedirect: `/login?redirectTo=/profile`
+    });
+```
+```js
+// app/routes/login.ts
+export const loader = async ({ request }) => {
+    const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "dashboard";
+
+    return supabaseStrategy.checkSession(request, {
+        successRedirect: redirectTo,
+    });
+};
+
+export const action: ActionFunction = async({ request }) =>{
+    // Always clone request when access formData() in action/loader with authenticator
+    // 💡 request.formData() can't be called twice
+    const data = await request.clone().formData();
+    // If authenticate success, redirectTo what found in searchParams 
+    // Or where you want
+    const redirectTo = data.get("redirectTo") ?? "/dashboard";
+    
+    return authenticator.authenticate('sb', request, {
+        successRedirect: redirectTo,
+        failureRedirect: '/login',
+    })
+}
+
+export default function LoginPage() {
+    const [searchParams] = useSearchParams();
+
+    return (
+        <Form method="post">
+            <input
+                name="redirectTo"
+                value={searchParams.get("redirectTo")}
+                hidden
+                readOnly
+            />
+            <input type="email" name="email" required />
+            <input
+                type="password"
+                name="password"
+            />
+            <button>Sign In</button>
+        </Form>
+    );
+}
+```
