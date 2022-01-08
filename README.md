@@ -1,4 +1,4 @@
-****# Remix Auth - Supabase Strategy
+# Remix Auth - Supabase Strategy
 
 > Strategy for using supabase with Remix Auth
 
@@ -29,11 +29,12 @@ It Supports the following:
 * `npm install remix-auth @afaik/remix-auth-supabase-strategy`
 
 ### Breaking change v2 to v3
-See [Set up a file to export the authenticator(s) and strategy](#set-up-a-file-to-export-the-authenticator-and-strategy)
+To allow for more freedom and support some of the different authentication types the verify no longer just sends the form, 
+but it now sends the entire request. See [Setup authenticator & strategy](#setup-authenticator-&-strategy)
 
-### Setup the sessionStorage
+### Setup sessionStorage
 ```js
-// app/services/session.server.ts
+// app/session.server.ts
 import { createCookieSessionStorage } from 'remix'
 
 export const sessionStorage = createCookieSessionStorage({
@@ -52,7 +53,7 @@ export const sessionStorage = createCookieSessionStorage({
 })
 ```
 
-### Set up a file to export the authenticator and strategy
+### Setup authenticator & strategy
 ```js
 // app/auth.server.ts
 import type { Session } from '@supabase/supabase-js'
@@ -95,22 +96,15 @@ export const authenticator = new Authenticator<Session>(
 authenticator.use(supabaseStrategy)
 ```
 
-### Use SupabaseStrategy to check user session and auto refresh token 🚀
+### Using the authenticator & strategy 🚀
 > `checkSession` works like `authenticator.isAuthenticated` but **handles token refresh**
 
 ```js
 // app/routes/login.ts
-export const loader: LoaderFunction = async({ request }) => {
-    // If the user is already authenticated, redirect to /profile directly
-    const session = supabaseStrategy.checkSession(request, {
+export const loader: LoaderFunction = async({ request }) => 
+    supabaseStrategy.checkSession(request, {
         successRedirect: '/profile'
-    });
-    
-    if (!session) {
-        // If the user is not authenticated, you can do something or nothing
-        // If you do nothing, /profile page is display
-    }
-}
+    })
 
 export const action: ActionFunction = async({ request }) =>
   authenticator.authenticate('sb', request, {
@@ -121,13 +115,8 @@ export const action: ActionFunction = async({ request }) =>
 export default function LoginPage() {
     return (
         <Form method="post">
-            <input type="email" name="email" required />
-            <input
-                type="password"
-                name="password"
-                autoComplete="current-password"
-                required
-            />
+            <input type="email" name="email" />
+            <input type="password" name="password" />
             <button>Sign In</button>
         </Form>
     );
@@ -138,13 +127,13 @@ export default function LoginPage() {
 // app/routes/profile.ts
 export const loader: LoaderFunction = async({ request }) => {
     // If token refresh and successRedirect not set, reload the current route
-    return supabaseStrategy.checkSession(
-        request,
-        {
-            failureRedirect: '/login',
-        })
+    const session = await supabaseStrategy.checkSession(request);
+
+    if (!session) {
+        // If the user is not authenticated, you can do something or nothing
+        // ⚠️ If you do nothing, /profile page is display
+    }
 }
-  
 
 // Handle logout action
 export const action: ActionFunction = async({ request }) => {
@@ -152,11 +141,10 @@ export const action: ActionFunction = async({ request }) => {
 }
 ```
 
-##### Get session or redirect
+##### Refresh token or redirect
 ```js
-// Get the session data or redirect to /login if it failed
 // If token is refreshing and successRedirect not set, it reloads the current route
-const session = await supabaseStrategy.checkSession(request, {
+await supabaseStrategy.checkSession(request, {
     failureRedirect: "/login",
 });
 ```
@@ -195,14 +183,6 @@ export const loader: LoaderFunction = async({ request }) => {
     
     // In this example, session is always null otherwise it would have been redirected
 }
-
-export const action: ActionFunction = async({ request }) =>
-  authenticator.authenticate('sb', request, {
-    successRedirect: '/profile',
-    failureRedirect: '/login',
-  })
-
-export default function LoginPage() { /* code */}
 ```
 
 #### Redirect to

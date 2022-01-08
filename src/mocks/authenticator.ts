@@ -6,7 +6,7 @@ import { SESSION_ERROR_KEY, SESSION_KEY } from './constants'
 import { sessionStorage } from './sessionStorage'
 import { supabaseClient } from './supabase'
 
-const verify = async({ req, supabaseClient }: VerifyParams) => {
+export const verify = async({ req, supabaseClient }: VerifyParams) => {
   const form = await req.formData()
   const email = form.get('email')
   const password = form.get('password')

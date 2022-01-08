@@ -41,6 +41,11 @@ export interface VerifyParams {
   readonly supabaseClient: SupabaseClient
 }
 
+export type CheckOptions =
+    | { successRedirect?: never; failureRedirect?: never }
+    | { successRedirect: string; failureRedirect?: never }
+    | { successRedirect?: never; failureRedirect: string }
+
 export class SupabaseStrategy extends
   Strategy<Session, VerifyParams> {
   name = 'sb'
@@ -130,10 +135,7 @@ export class SupabaseStrategy extends
     failureRedirect?: never
   }): Promise<Session | null>
 
-  async checkSession(req: Request, checkOptions:
-  | { successRedirect?: never; failureRedirect?: never }
-  | { successRedirect: string; failureRedirect?: never }
-  | { successRedirect?: never; failureRedirect: string } = {}): Promise<Session | null> {
+  async checkSession(req: Request, checkOptions: CheckOptions = {}): Promise<Session | null> {
     const sessionCookie = await this.sessionStorage.getSession(req.headers.get('Cookie'))
     const session: Session | null = sessionCookie.get(this.sessionKey)
     const options = { sessionKey: this.sessionKey, sessionErrorKey: this.sessionErrorKey, ...checkOptions }
