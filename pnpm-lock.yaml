@@ -20,6 +20,9 @@ specifiers:
   vite: ^2.7.6
   vitest: ^0.0.133
 
+dependencies:
+  remix-auth: 3.2.1_969815ef34664ca7c9cb8a3408473b97
+
 devDependencies:
   '@antfu/eslint-config': 0.14.2_eslint@7.32.0+typescript@4.5.4
   '@remix-run/node': 1.1.1_react@17.0.2
@@ -35,7 +38,6 @@ devDependencies:
   formdata-polyfill: 4.0.10
   msw: 0.36.3
   react: 17.0.2
-  remix-auth: 3.2.1_969815ef34664ca7c9cb8a3408473b97
   typescript: 4.5.4
   vite: 2.7.10
   vitest: 0.0.133_@vitest+ui@0.0.133+c8@7.11.0
@@ -3206,7 +3208,7 @@ packages:
       uuid: 8.3.2
     transitivePeerDependencies:
       - react
-    dev: true
+    dev: false
 
   /remix-utils/2.4.0_969815ef34664ca7c9cb8a3408473b97:
     resolution: {integrity: sha512-qwzlPwjvRHIrPULnl7AFZAbjku6sihid2412QLMc8bPC6mm1XpUKnJtebW30WtO6wgwQu2CAwhIFQ2HsBQLXTw==}
@@ -3221,7 +3223,7 @@ packages:
       react: 17.0.2
       type-fest: 2.8.0
       uuid: 8.3.2
-    dev: true
+    dev: false
 
   /require-directory/2.1.1:
     resolution: {integrity: sha1-jGStX9MNqxyXbiNE/+f3kqam30I=}
@@ -3661,7 +3663,7 @@ packages:
   /type-fest/2.8.0:
     resolution: {integrity: sha512-O+V9pAshf9C6loGaH0idwsmugI2LxVNR7DtS40gVo2EXZVYFgz9OuNtOhgHLdHdapOEWNdvz9Ob/eeuaWwwlxA==}
     engines: {node: '>=12.20'}
-    dev: true
+    dev: false
 
   /type/1.2.0:
     resolution: {integrity: sha512-+5nt5AAniqsCnu2cEQQdpzCAh33kVx8n0VoFidKpB1dVVLAN/F+bgVOqOJqOnEnrhp222clB5p3vUlD+1QAnfg==}
@@ -3724,7 +3726,7 @@ packages:
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
-    dev: true
+    dev: false
 
   /v8-compile-cache/2.3.0:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}
