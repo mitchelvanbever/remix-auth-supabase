@@ -8,5 +8,5 @@ export const authenticatedReq = async(init: Request = req, cookieInit?: CookieIn
 
   const headersInit: HeadersInit | undefined = res?.headers?.get('Cookie') ? { Cookie: res.headers.get('Cookie') as string } : undefined
 
-  return new Request('', { headers: headersInit })
+  return new Request(init, { headers: headersInit })
 }

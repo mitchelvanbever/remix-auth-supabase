@@ -39,6 +39,7 @@
     "@remix-run/node": "^1.0.3",
     "@remix-run/react": "^1.1.1",
     "@remix-run/server-runtime": "^1.0.0",
+    "@supabase/supabase-js": "^1.29.1",
     "@types/faker": "^5.5.9",
     "@types/react": "^17.0.38",
     "@vitest/ui": "^0.0.133",
@@ -53,9 +54,7 @@
     "vitest": "^0.0.133"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^1.29.1",
-    "add": "^2.0.6",
-    "remix-auth": "^3.1.0"
+    "remix-auth": "^3.2.1"
   },
   "eslintConfig": {
     "extends": "@antfu/eslint-config"
