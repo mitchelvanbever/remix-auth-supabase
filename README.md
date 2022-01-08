@@ -218,7 +218,7 @@ export const loader: LoaderFunction = async({ request }) =>
 ```js
 // app/routes/login.ts
 export const loader = async ({ request }) => {
-    const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "dashboard";
+    const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "/dashboard";
 
     return supabaseStrategy.checkSession(request, {
         successRedirect: redirectTo,
