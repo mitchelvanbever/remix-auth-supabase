@@ -226,7 +226,7 @@ export default function LoginPage() {
         <Form method="post">
             <input
                 name="redirectTo"
-                value={searchParams.get("redirectTo")}
+                value={searchParams.get("redirectTo") ?? undefined}
                 hidden
                 readOnly
             />

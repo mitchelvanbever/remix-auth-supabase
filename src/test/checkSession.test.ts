@@ -7,12 +7,15 @@ import { validResponse } from '../mocks/handlers'
 
 describe('[external export] revalidate', async() => {
   it('should redirect if cookie is not set', async() => {
-    expect.assertions(1)
+    expect.assertions(2)
     await supabaseStrategy.checkSession(new Request(''),
       {
         failureRedirect: '/login',
       },
-    ).catch(res => expect(res.status).toBe(302))
+    ).catch((res) => {
+      expect(res.status).toBe(302)
+      expect(res.headers.get('Location')).toEqual('/login')
+    })
   })
   it('should return null if no cookie is set', async() => {
     expect.assertions(1)
