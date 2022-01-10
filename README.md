@@ -24,12 +24,12 @@ It Supports the following:
 ## How to use
 
 ### Install the package (and remix-auth)
-* `yarn add remix-auth @afaik/remix-auth-supabase-strategy`
-* `pnpm install remix-auth @afaik/remix-auth-supabase-strategy`
-* `npm install remix-auth @afaik/remix-auth-supabase-strategy`
+* `yarn add remix-auth remix-auth-supabase`
+* `pnpm install remix-auth remix-auth-supabase`
+* `npm install remix-auth remix-auth-supabase`
 
 ### Breaking change v2 to v3
-To allow for more freedom and support some of the different authentication types the verify no longer just sends the form, 
+To allow for more freedom and support some of the different authentication types the verify no longer just sends the form,
 but it now sends the entire request. See [Setup authenticator & strategy](#setup-authenticator-&-strategy)
 
 ### Setup sessionStorage, strategy & authenticator
@@ -112,31 +112,31 @@ export const action: ActionFunction = async({ request }) =>
   })
 
 export default function LoginPage() {
-    return (
-        <Form method="post">
-            <input type="email" name="email" />
-            <input type="password" name="password" />
-            <button>Sign In</button>
-        </Form>
-    );
+  return (
+    <Form method="post">
+      <input type="email" name="email" />
+      <input type="password" name="password" />
+      <button>Sign In</button>
+    </Form>
+  );
 }
 ```
 
 ```js
 // app/routes/private.ts
 export const loader: LoaderFunction = async({ request }) => {
-    // If token refresh and successRedirect not set, reload the current route
-    const session = await supabaseStrategy.checkSession(request);
+  // If token refresh and successRedirect not set, reload the current route
+  const session = await supabaseStrategy.checkSession(request);
 
-    if (!session) {
-        // If the user is not authenticated, you can do something or nothing
-        // ⚠️ If you do nothing, /profile page is display
-    }
+  if (!session) {
+      // If the user is not authenticated, you can do something or nothing
+      // ⚠️ If you do nothing, /profile page is display
+  }
 }
 
 // Handle logout action
 export const action: ActionFunction = async({ request }) => {
-    await authenticator.logout(request, { redirectTo: "/login" });
+  await authenticator.logout(request, { redirectTo: "/login" });
 }
 ```
 
@@ -144,7 +144,7 @@ export const action: ActionFunction = async({ request }) => {
 ```js
 // If token is refreshing and successRedirect not set, it reloads the current route
 await supabaseStrategy.checkSession(request, {
-    failureRedirect: "/login",
+  failureRedirect: "/login",
 });
 ```
 
@@ -162,9 +162,9 @@ await supabaseStrategy.checkSession(request, {
 // the result
 const session = await supabaseStrategy.checkSession(request);
 if (session) {
-    // Here the user is authenticated
+  // Here the user is authenticated
 } else {
-    // Here the user is not authenticated
+  // Here the user is not authenticated
 }
 ```
 
@@ -209,9 +209,9 @@ export const loader: LoaderFunction = async({ request }) =>
 export const loader = async ({ request }) => {
     const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "/profile";
 
-    return supabaseStrategy.checkSession(request, {
-        successRedirect: redirectTo,
-    });
+  return supabaseStrategy.checkSession(request, {
+    successRedirect: redirectTo,
+  });
 };
 
 export const action: ActionFunction = async({ request }) =>{
