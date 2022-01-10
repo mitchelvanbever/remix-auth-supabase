@@ -24,12 +24,12 @@ It Supports the following:
 ## How to use
 
 ### Install the package (and remix-auth)
-* `yarn add remix-auth @afaik/remix-auth-supabase-strategy`
-* `pnpm install remix-auth @afaik/remix-auth-supabase-strategy`
-* `npm install remix-auth @afaik/remix-auth-supabase-strategy`
+* `yarn add remix-auth remix-auth-supabase`
+* `pnpm install remix-auth remix-auth-supabase`
+* `npm install remix-auth remix-auth-supabase`
 
 ### Breaking change v2 to v3
-To allow for more freedom and support some of the different authentication types the verify no longer just sends the form, 
+To allow for more freedom and support some of the different authentication types the verify no longer just sends the form,
 but it now sends the entire request. See [Setup authenticator & strategy](#setup-authenticator-&-strategy)
 
 ### Setup sessionStorage
@@ -58,16 +58,16 @@ export const sessionStorage = createCookieSessionStorage({
 // app/auth.server.ts
 import type { Session } from '@supabase/supabase-js'
 import { Authenticator } from 'remix-auth'
-import { SupabaseStrategy } from '@afaik/remix-auth-supabase-strategy'
+import { SupabaseStrategy } from 'remix-auth-supabase'
 import { supabase } from '~/utils/supabase'
 import { sessionStorage } from '~/session.server'
 
 export const supabaseStrategy = new SupabaseStrategy(
   {
-      supabaseClient: supabase,
-      sessionStorage,
-      sessionKey: 'sb:session', // if not set, default is sb:session
-      sessionErrorKey: 'sb:error', // if not set, default is sb:error
+    supabaseClient: supabase,
+    sessionStorage,
+    sessionKey: 'sb:session', // if not set, default is sb:session
+    sessionErrorKey: 'sb:error', // if not set, default is sb:error
   },
   async ({ req, supabaseClient }) => {
     // simple verify example for email/password auth
@@ -89,8 +89,8 @@ export const supabaseStrategy = new SupabaseStrategy(
 export const authenticator = new Authenticator<Session>(
   sessionStorage,
   {
-      sessionKey: supabaseStrategy.sessionKey, // keep in sync
-      sessionErrorKey: supabaseStrategy.sessionErrorKey, // keep in sync
+    sessionKey: supabaseStrategy.sessionKey, // keep in sync
+    sessionErrorKey: supabaseStrategy.sessionErrorKey, // keep in sync
   })
 
 authenticator.use(supabaseStrategy)
@@ -101,10 +101,10 @@ authenticator.use(supabaseStrategy)
 
 ```js
 // app/routes/login.ts
-export const loader: LoaderFunction = async({ request }) => 
-    supabaseStrategy.checkSession(request, {
-        successRedirect: '/profile'
-    })
+export const loader: LoaderFunction = async({ request }) =>
+  supabaseStrategy.checkSession(request, {
+    successRedirect: '/profile'
+  })
 
 export const action: ActionFunction = async({ request }) =>
   authenticator.authenticate('sb', request, {
@@ -113,31 +113,31 @@ export const action: ActionFunction = async({ request }) =>
   })
 
 export default function LoginPage() {
-    return (
-        <Form method="post">
-            <input type="email" name="email" />
-            <input type="password" name="password" />
-            <button>Sign In</button>
-        </Form>
-    );
+  return (
+    <Form method="post">
+      <input type="email" name="email" />
+      <input type="password" name="password" />
+      <button>Sign In</button>
+    </Form>
+  );
 }
 ```
 
 ```js
 // app/routes/profile.ts
 export const loader: LoaderFunction = async({ request }) => {
-    // If token refresh and successRedirect not set, reload the current route
-    const session = await supabaseStrategy.checkSession(request);
+  // If token refresh and successRedirect not set, reload the current route
+  const session = await supabaseStrategy.checkSession(request);
 
-    if (!session) {
-        // If the user is not authenticated, you can do something or nothing
-        // ⚠️ If you do nothing, /profile page is display
-    }
+  if (!session) {
+      // If the user is not authenticated, you can do something or nothing
+      // ⚠️ If you do nothing, /profile page is display
+  }
 }
 
 // Handle logout action
 export const action: ActionFunction = async({ request }) => {
-    await authenticator.logout(request, { redirectTo: "/login" });
+  await authenticator.logout(request, { redirectTo: "/login" });
 }
 ```
 
@@ -145,7 +145,7 @@ export const action: ActionFunction = async({ request }) => {
 ```js
 // If token is refreshing and successRedirect not set, it reloads the current route
 await supabaseStrategy.checkSession(request, {
-    failureRedirect: "/login",
+  failureRedirect: "/login",
 });
 ```
 
@@ -153,7 +153,7 @@ await supabaseStrategy.checkSession(request, {
 ```js
 // If the user is authenticated, redirect to /profile
 await supabaseStrategy.checkSession(request, {
-    successRedirect: "/profile",
+  successRedirect: "/profile",
 });
 ```
 
@@ -163,9 +163,9 @@ await supabaseStrategy.checkSession(request, {
 // the result
 const session = await supabaseStrategy.checkSession(request);
 if (session) {
-    // Here the user is authenticated
+  // Here the user is authenticated
 } else {
-    // Here the user is not authenticated
+  // Here the user is not authenticated
 }
 ```
 
@@ -175,13 +175,13 @@ if (session) {
 ```js
 // app/routes/login.ts
 export const loader: LoaderFunction = async({ request }) => {
-    // Beware, never set failureRedirect equals to the current route
-    const session = supabaseStrategy.checkSession(request, {
-        successRedirect: '/profile',
-        failureRedirect: "/login", // ❌ DONT'T : infinite loop
-    });
-    
-    // In this example, session is always null otherwise it would have been redirected
+  // Beware, never set failureRedirect equals to the current route
+  const session = supabaseStrategy.checkSession(request, {
+      successRedirect: '/profile',
+      failureRedirect: "/login", // ❌ DONT'T : infinite loop
+  });
+
+  // In this example, session is always null otherwise it would have been redirected
 }
 ```
 
@@ -190,53 +190,53 @@ export const loader: LoaderFunction = async({ request }) => {
 ```js
 // app/routes/profile.ts
 export const loader: LoaderFunction = async({ request }) =>
-    // If checkSession fails, redirect to login and go back here when authenticated
-    supabaseStrategy.checkSession(request, {
-        failureRedirect: `/login?redirectTo=/profile`
-    });
+  // If checkSession fails, redirect to login and go back here when authenticated
+  supabaseStrategy.checkSession(request, {
+      failureRedirect: `/login?redirectTo=/profile`
+  });
 ```
 ```js
 // app/routes/login.ts
 export const loader = async ({ request }) => {
-    const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "/dashboard";
+  const redirectTo = new URL(request.url).searchParams.get("redirectTo") ?? "/dashboard";
 
-    return supabaseStrategy.checkSession(request, {
-        successRedirect: redirectTo,
-    });
+  return supabaseStrategy.checkSession(request, {
+    successRedirect: redirectTo,
+  });
 };
 
 export const action: ActionFunction = async({ request }) =>{
-    // Always clone request when access formData() in action/loader with authenticator
-    // 💡 request.formData() can't be called twice
-    const data = await request.clone().formData();
-    // If authenticate success, redirectTo what found in searchParams 
-    // Or where you want
-    const redirectTo = data.get("redirectTo") ?? "/dashboard";
-    
-    return authenticator.authenticate('sb', request, {
-        successRedirect: redirectTo,
-        failureRedirect: '/login',
-    })
+  // Always clone request when access formData() in action/loader with authenticator
+  // 💡 request.formData() can't be called twice
+  const data = await request.clone().formData();
+  // If authenticate success, redirectTo what found in searchParams
+  // Or where you want
+  const redirectTo = data.get("redirectTo") ?? "/dashboard";
+
+  return authenticator.authenticate('sb', request, {
+    successRedirect: redirectTo,
+    failureRedirect: '/login',
+  })
 }
 
 export default function LoginPage() {
-    const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
-    return (
-        <Form method="post">
-            <input
-                name="redirectTo"
-                value={searchParams.get("redirectTo") ?? undefined}
-                hidden
-                readOnly
-            />
-            <input type="email" name="email" required />
-            <input
-                type="password"
-                name="password"
-            />
-            <button>Sign In</button>
-        </Form>
-    );
+  return (
+      <Form method="post">
+          <input
+            name="redirectTo"
+            value={searchParams.get("redirectTo") ?? undefined}
+            hidden
+            readOnly
+          />
+          <input type="email" name="email" required />
+          <input
+            type="password"
+            name="password"
+          />
+          <button>Sign In</button>
+      </Form>
+  );
 }
 ```
