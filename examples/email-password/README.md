@@ -6,7 +6,7 @@ Authentication using `signInWithEmail`.
 
 Open this example on [CodeSandbox](https://codesandbox.com):
 
-[![Open in CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/email-password)
+[![Open in CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mitchelvanbever/remix-auth-supabase/tree/main/examples/email-password)
 
 ## Setup
 
@@ -31,7 +31,7 @@ You must use `checkSession` instead of `isAuthenticated`
 
 ## Example
 
-This is using Remix Auth, `@afaik/remix-auth-supabase-strategy` and `supabase-js` packages.
+This is using Remix Auth, `remix-auth-supabase` and `supabase-js` packages.
 
 > Thanks to Remix, we can securely use server only authentication with `supabase.auth.api.signInWithEmail`
 >
@@ -46,10 +46,10 @@ The `/private` routes redirects the user to `/login` if it's not logged-in, or s
 
 **Handle refreshing of tokens** (if expired) or redirects to `/login` if it fails
 
-More use cases can be found on [Supabase Strategy - Use cases](https://github.com/mitchelvanbever/remix-auth-supabase-strategy#using-the-authenticator--strategy-)
+More use cases can be found on [Supabase Strategy - Use cases](https://github.com/mitchelvanbever/remix-auth-supabase#using-the-authenticator--strategy-)
 
 ## Related Links
 
 - [Remix Auth](https://github.com/sergiodxa/remix-auth)
-- [Supabase Strategy](https://github.com/mitchelvanbever/remix-auth-supabase-strategy)
+- [Supabase Strategy](https://github.com/mitchelvanbever/remix-auth-supabase)
 - [supabase-js](https://github.com/supabase/supabase-js)
