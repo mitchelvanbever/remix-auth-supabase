@@ -3,9 +3,9 @@ lockfileVersion: 5.3
 specifiers:
   '@antfu/eslint-config': ^0.14.0
   '@faker-js/faker': ^6.0.0-alpha.3
-  '@remix-run/node': ^1.0.3
+  '@remix-run/node': ^1.1.1
   '@remix-run/react': ^1.1.1
-  '@remix-run/server-runtime': ^1.0.0
+  '@remix-run/server-runtime': ^1.1.1
   '@supabase/supabase-js': ^1.29.1
   '@types/faker': ^5.5.9
   '@types/react': ^17.0.38
