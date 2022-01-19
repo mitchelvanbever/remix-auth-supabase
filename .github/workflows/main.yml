@@ -70,7 +70,7 @@ jobs:
         run: pnpm install
 
       - name: Test
-        run: pnpm run test
+        run: pnpm run test:ci
 
   lint:
     name: Linter

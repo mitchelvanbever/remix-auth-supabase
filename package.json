@@ -14,8 +14,8 @@
     "build": "tsc --project tsconfig.build.json",
     "typecheck": "tsc --project tsconfig.json --noEmit",
     "lint": "eslint --ext .ts,.tsx src/",
-    "test": "vitest",
-    "test:ui": "vitest --ui",
+    "test": "vitest --ui",
+    "test:ci": "vitest",
     "cov": "vitest --coverage"
   },
   "keywords": [
