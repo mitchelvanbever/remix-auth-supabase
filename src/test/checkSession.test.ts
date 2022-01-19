@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { user } from '../mocks/user'
 import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'

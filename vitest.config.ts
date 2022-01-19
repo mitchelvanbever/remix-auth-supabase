@@ -1,10 +1,10 @@
 /// <reference types="vitest" />
+/// <reference types="vite/client" />
 
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   test: {
-    global: true,
     environment: 'node',
     setupFiles: ['./src/test/setup.ts'],
     coverage: {

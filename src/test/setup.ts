@@ -1,3 +1,4 @@
+import { afterAll, afterEach, beforeAll } from 'vitest'
 import { installGlobals } from '@remix-run/node'
 
 import { server } from '../mocks/server'

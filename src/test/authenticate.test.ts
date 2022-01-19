@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { authenticator } from '../mocks/authenticator'
 import { password, user } from '../mocks/user'
 import { validResponse } from '../mocks/handlers'

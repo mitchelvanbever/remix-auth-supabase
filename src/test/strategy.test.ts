@@ -1,3 +1,5 @@
+import { describe, expect, it } from 'vitest'
+
 import { SupabaseStrategy } from '../index'
 import { supabaseClient } from '../mocks/supabase'
 import { sessionStorage } from '../mocks/sessionStorage'
