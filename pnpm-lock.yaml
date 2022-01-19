@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 specifiers:
   '@antfu/eslint-config': ^0.14.0
+  '@faker-js/faker': ^6.0.0-alpha.3
   '@remix-run/node': ^1.0.3
   '@remix-run/react': ^1.1.1
   '@remix-run/server-runtime': ^1.0.0
@@ -11,7 +12,6 @@ specifiers:
   '@vitest/ui': ^0.1.24
   c8: ^7.10.0
   eslint: ^7.26.0
-  faker: 5.5.3
   formdata-polyfill: ^4.0.10
   msw: ^0.36.3
   react: ^17.0.2
@@ -25,6 +25,7 @@ dependencies:
 
 devDependencies:
   '@antfu/eslint-config': 0.14.2_eslint@7.32.0+typescript@4.5.4
+  '@faker-js/faker': 6.0.0-alpha.3
   '@remix-run/node': 1.1.1_react@17.0.2
   '@remix-run/react': 1.1.1_react@17.0.2
   '@remix-run/server-runtime': 1.1.1_react@17.0.2
@@ -34,7 +35,6 @@ devDependencies:
   '@vitest/ui': 0.1.24
   c8: 7.11.0
   eslint: 7.32.0
-  faker: 5.5.3
   formdata-polyfill: 4.0.10
   msw: 0.36.4
   react: 17.0.2
@@ -374,6 +374,10 @@ packages:
       strip-json-comments: 3.1.1
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /@faker-js/faker/6.0.0-alpha.3:
+    resolution: {integrity: sha512-8B+7Jlwb9ogcoluzxB6AaSRZn2gnoewTA/WygAYhWNxkrFKjQL0TDXK6AW6uJlASMKl7qG/qbEVtpjLByuL0ZQ==}
     dev: true
 
   /@humanwhocodes/config-array/0.5.0:
@@ -1978,10 +1982,6 @@ packages:
       chardet: 0.7.0
       iconv-lite: 0.4.24
       tmp: 0.0.33
-    dev: true
-
-  /faker/5.5.3:
-    resolution: {integrity: sha512-wLTv2a28wjUyWkbnX7u/ABZBkUkIF2fCd73V6P2oFqEGEktDfzWx4UxrSqtPRw0xPRAcjeAOIiJWqZm3pP4u3g==}
     dev: true
 
   /fast-deep-equal/3.1.3:
