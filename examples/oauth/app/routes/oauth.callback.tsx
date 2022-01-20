@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import type { ActionFunction } from 'remix'
 import { useSubmit } from 'remix'
 import { authenticator } from '~/auth.server'
-import { supabaseClient } from '~/supabase'
+import { supabaseClient } from '~/supabase.client'
 
 export const action: ActionFunction = async({ request }) => {
   await authenticator.authenticate('sb-oauth', request, {
