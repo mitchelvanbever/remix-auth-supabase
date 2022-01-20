@@ -2,6 +2,9 @@
 
 Authentication using `signIn with oauth provider`.
 
+[Enable GitHub Auth for your project](https://supabase.com/docs/guides/auth/auth-github)
+
+
 ## Preview
 
 Open this example on [CodeSandbox](https://codesandbox.com):
