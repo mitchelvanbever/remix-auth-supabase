@@ -21,9 +21,9 @@ export default function OAuth() {
         formData.append('session', JSON.stringify(session))
 
         submit(formData, { method: 'post' })
+        supabaseClient.auth.signOut()
       }
     },
-
     )
   }, [submit])
 
