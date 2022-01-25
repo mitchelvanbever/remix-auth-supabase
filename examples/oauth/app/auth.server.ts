@@ -15,40 +15,6 @@ export const sessionStorage = createCookieSessionStorage({
   },
 })
 
-export const supabaseStrategy = new SupabaseStrategy(
-  {
-    supabaseClient: supabaseAdmin,
-    sessionStorage,
-    sessionKey: 'sb:session',
-    sessionErrorKey: 'sb:error',
-  },
-  async({ req, supabaseClient }) => {
-    const form = await req.formData()
-    const email = form?.get('email')
-    const password = form?.get('password')
-
-    if (!email) throw new AuthorizationError('Email is required')
-    if (typeof email !== 'string')
-      throw new AuthorizationError('Email must be a string')
-
-    if (!password) throw new AuthorizationError('Password is required')
-    if (typeof password !== 'string')
-      throw new AuthorizationError('Password must be a string')
-
-    return supabaseClient.auth.api
-      .signInWithEmail(email, password)
-      .then(({ data, error }): Session => {
-        if (error || !data) {
-          throw new AuthorizationError(
-            error?.message ?? 'No user session found',
-          )
-        }
-
-        return data
-      })
-  },
-)
-
 export const oAuthStrategy = new SupabaseStrategy(
   {
     supabaseClient: supabaseAdmin,
@@ -68,9 +34,8 @@ export const oAuthStrategy = new SupabaseStrategy(
 )
 
 export const authenticator = new Authenticator<Session>(sessionStorage, {
-  sessionKey: supabaseStrategy.sessionKey,
-  sessionErrorKey: supabaseStrategy.sessionErrorKey,
+  sessionKey: oAuthStrategy.sessionKey,
+  sessionErrorKey: oAuthStrategy.sessionErrorKey,
 })
 
-authenticator.use(supabaseStrategy)
 authenticator.use(oAuthStrategy, 'sb-oauth')

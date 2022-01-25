@@ -1,6 +1,6 @@
 import type { ActionFunction, LoaderFunction } from 'remix'
 import { Form, json, useLoaderData } from 'remix'
-import { authenticator, supabaseStrategy } from '~/auth.server'
+import { authenticator, oAuthStrategy } from '~/auth.server'
 
 type LoaderData = { email?: string }
 
@@ -9,7 +9,7 @@ export const action: ActionFunction = async({ request }) => {
 }
 
 export const loader: LoaderFunction = async({ request }) => {
-  const session = await supabaseStrategy.checkSession(request, {
+  const session = await oAuthStrategy.checkSession(request, {
     failureRedirect: '/login',
   })
 

@@ -1,21 +1,14 @@
-import type { ActionFunction, LoaderFunction } from 'remix'
+import type { LoaderFunction } from 'remix'
 import { Form, json, useLoaderData } from 'remix'
-import { authenticator, sessionStorage, supabaseStrategy } from '~/auth.server'
+import { authenticator, oAuthStrategy, sessionStorage } from '~/auth.server'
 import { signInWithGithub } from '~/supabase.client'
 
 type LoaderData = {
   error: { message: string } | null
 }
 
-export const action: ActionFunction = async({ request }) => {
-  await authenticator.authenticate('sb', request, {
-    successRedirect: '/private',
-    failureRedirect: '/login',
-  })
-}
-
 export const loader: LoaderFunction = async({ request }) => {
-  await supabaseStrategy.checkSession(request, {
+  await oAuthStrategy.checkSession(request, {
     successRedirect: '/private',
   })
 
@@ -35,21 +28,8 @@ export default function Screen() {
 
   return (
     <>
-      <Form method="post">
-        {error && <div>{error.message}</div>}
-        <div>
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" id="email" />
-        </div>
+      {error && <div>{error.message}</div>}
 
-        <div>
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" id="password" />
-        </div>
-
-        <button>Log In</button>
-
-      </Form>
       <p>
         <button onClick={() => signInWithGithub()}>Sign in with Github</button>
       </p>
