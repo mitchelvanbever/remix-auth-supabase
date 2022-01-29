@@ -55,10 +55,10 @@ export class SupabaseStrategy extends
   private readonly supabaseClient: SupabaseClient
   private readonly sessionStorage: SessionStorage
 
-  private pendingHandleRefreshToken?: Promise<{
+  private pendingHandleRefreshToken: Promise<{
     data: Session | null
     error: ApiError | null
-  }>
+  }> | null = null
 
   constructor(
     options: SupabaseStrategyOptions,
@@ -153,7 +153,7 @@ export class SupabaseStrategy extends
     if (!user || user?.error) {
       if (!this.pendingHandleRefreshToken) {
         this.pendingHandleRefreshToken = this.handleRefreshToken(session.refresh_token).then(({ data, error }) => {
-          this.pendingHandleRefreshToken = undefined
+          this.pendingHandleRefreshToken = null
           return { data, error }
         })
       }
