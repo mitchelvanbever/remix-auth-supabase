@@ -55,6 +55,11 @@ export class SupabaseStrategy extends
   private readonly supabaseClient: SupabaseClient
   private readonly sessionStorage: SessionStorage
 
+  private pendingHandleRefreshToken?: Promise<{
+    data: Session | null
+    error: ApiError | null
+  }>
+
   constructor(
     options: SupabaseStrategyOptions,
     verify: StrategyVerifyCallback<Session, VerifyParams>,
@@ -146,7 +151,13 @@ export class SupabaseStrategy extends
     const user = await this.getUser(session.access_token)
 
     if (!user || user?.error) {
-      const [res, error] = await handlePromise(this.handleRefreshToken(session.refresh_token))
+      if (!this.pendingHandleRefreshToken) {
+        this.pendingHandleRefreshToken = this.handleRefreshToken(session.refresh_token).then(({ data, error }) => {
+          this.pendingHandleRefreshToken = undefined
+          return { data, error }
+        })
+      }
+      const [res, error] = await handlePromise(this.pendingHandleRefreshToken)
 
       if (!res?.data || res?.error || error)
         return this.handleResult(req, options, 'Could not refresh session', true)
