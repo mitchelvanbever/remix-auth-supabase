@@ -48,17 +48,17 @@ export type CheckOptions =
 
 export class SupabaseStrategy extends
   Strategy<Session, VerifyParams> {
+  private static pendingHandleRefreshToken: Promise<{
+    data: Session | null
+    error: ApiError | null
+  }> | null = null
+
   name = 'sb'
   readonly sessionKey: string
   readonly sessionErrorKey: string
 
   private readonly supabaseClient: SupabaseClient
   private readonly sessionStorage: SessionStorage
-
-  private pendingHandleRefreshToken: Promise<{
-    data: Session | null
-    error: ApiError | null
-  }> | null = null
 
   constructor(
     options: SupabaseStrategyOptions,
@@ -151,13 +151,13 @@ export class SupabaseStrategy extends
     const user = await this.getUser(session.access_token)
 
     if (!user || user?.error) {
-      if (!this.pendingHandleRefreshToken) {
-        this.pendingHandleRefreshToken = this.handleRefreshToken(session.refresh_token).then(({ data, error }) => {
-          this.pendingHandleRefreshToken = null
-          return { data, error }
-        })
-      }
-      const [res, error] = await handlePromise(this.pendingHandleRefreshToken)
+      if (!SupabaseStrategy.pendingHandleRefreshToken)
+        SupabaseStrategy.pendingHandleRefreshToken = this.handleRefreshToken(session.refresh_token)
+
+      const [res, error] = await handlePromise(SupabaseStrategy.pendingHandleRefreshToken).then(([data, error]) => {
+        SupabaseStrategy.pendingHandleRefreshToken = null
+        return [data, error]
+      })
 
       if (!res?.data || res?.error || error)
         return this.handleResult(req, options, 'Could not refresh session', true)
