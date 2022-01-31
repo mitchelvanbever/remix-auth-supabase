@@ -21,7 +21,10 @@ export default function OAuth() {
         formData.append('session', JSON.stringify(session))
 
         submit(formData, { method: 'post' })
-        supabaseClient.auth.signOut()
+
+        // if you don't want to keep supabase session in borwser
+        // don't use supabaseClient.auth.signOut(), it invalidates refresh token
+        localStorage.removeItem('supabase.auth.token')
       }
     },
     )
