@@ -154,9 +154,9 @@ export class SupabaseStrategy extends
       if (!SupabaseStrategy.pendingHandleRefreshToken)
         SupabaseStrategy.pendingHandleRefreshToken = this.handleRefreshToken(session.refresh_token)
 
-      const [res, error] = await handlePromise(SupabaseStrategy.pendingHandleRefreshToken).then(([data, error]) => {
+      const [res, error] = await handlePromise(SupabaseStrategy.pendingHandleRefreshToken).then((newSession) => {
         SupabaseStrategy.pendingHandleRefreshToken = null
-        return [data, error]
+        return newSession
       })
 
       if (!res?.data || res?.error || error)
