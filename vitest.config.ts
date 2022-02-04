@@ -8,8 +8,9 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['./src/test/setup.ts'],
     coverage: {
-      reporter: ['text', 'json', 'html'],
-      exclude: ['./src/mocks', './src/test'],
+      cleanOnReRun: true,
+      reporter: ['text', 'html'],
+      inlcude: ['./src/index.ts', './src/handlePromise.ts'],
     },
   },
 })
