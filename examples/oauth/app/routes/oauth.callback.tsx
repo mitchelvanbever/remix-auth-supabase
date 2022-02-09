@@ -15,7 +15,7 @@ export default function OAuth() {
   const submit = useSubmit()
 
   useEffect(() => {
-    supabaseClient.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabaseClient.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN') {
         const formData = new FormData()
         formData.append('session', JSON.stringify(session))
@@ -28,6 +28,10 @@ export default function OAuth() {
       }
     },
     )
+
+    return () => {
+      authListener?.unsubscribe()
+    }
   }, [submit])
 
   return null
