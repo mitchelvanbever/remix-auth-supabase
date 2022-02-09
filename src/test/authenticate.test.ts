@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import { authenticator } from '../mocks/authenticator'
 import { password, user } from '../mocks/user'
-import { validResponse } from '../mocks/handlers'
+import { sanitizedSession } from '../mocks/session'
 
 describe('authenticate', async() => {
   it('should handle faulty requests', async() => {
@@ -42,6 +42,6 @@ describe('authenticate', async() => {
         method: 'POST',
         body: fData,
       },
-    )).then(res => expect(res).toEqual(validResponse))
+    )).then(res => expect(res).toEqual(sanitizedSession))
   })
 })

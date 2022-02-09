@@ -5,4 +5,5 @@ export const password = internet.password()
 export const email = internet.email()
 export const user: Partial<User> = {
   email,
+  identities: [],
 }

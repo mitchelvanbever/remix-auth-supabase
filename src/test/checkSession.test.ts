@@ -5,7 +5,7 @@ import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
 import { SESSION_KEY } from '../mocks/constants'
-import { validResponse } from '../mocks/handlers'
+import { sanitizedSession } from '../mocks/session'
 
 describe('[external export] revalidate', async() => {
   it('should redirect if cookie is not set', async() => {
@@ -46,7 +46,7 @@ describe('[external export] revalidate', async() => {
       {
         failureRedirect: '/login',
       },
-    ).then(session => expect(session).toEqual(validResponse))
+    ).then(session => expect(session).toEqual(sanitizedSession))
   })
   it('should return null if refresh token fails', async() => {
     expect.assertions(1)
@@ -72,7 +72,7 @@ describe('[external export] revalidate', async() => {
     await supabaseStrategy.checkSession(req,
     ).catch(async(error) => {
       const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
-      expect(cookies?.[SESSION_KEY]).toEqual(validResponse)
+      expect(cookies?.[SESSION_KEY]).toEqual(sanitizedSession)
       expect(error.status).toEqual(302)
       expect(error.headers.get('Location')).toEqual('/profile')
     })
@@ -89,7 +89,7 @@ describe('[external export] revalidate', async() => {
     await supabaseStrategy.checkSession(req, { successRedirect: '/dashboard' },
     ).catch(async(error) => {
       const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
-      expect(cookies?.[SESSION_KEY]).toEqual(validResponse)
+      expect(cookies?.[SESSION_KEY]).toEqual(sanitizedSession)
       expect(error.status).toEqual(302)
       expect(error.headers.get('Location')).toEqual('/dashboard')
     })

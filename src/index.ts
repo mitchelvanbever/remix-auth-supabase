@@ -84,7 +84,7 @@ export class SupabaseStrategy extends
     if (error || !data)
       return this.failure((error as Error)?.message ?? 'No user found', req, sessionStorage, options)
 
-    return this.success(data, req, sessionStorage, options)
+    return this.success(this.sanitizeSession(data), req, sessionStorage, options)
   }
 
   private async getUser(accessToken: string): Promise<{
@@ -120,6 +120,12 @@ export class SupabaseStrategy extends
     return result
   }
 
+  private sanitizeSession(session: Session): Session {
+    delete session.user?.identities
+
+    return session
+  }
+
   async checkSession(req: Request, checkOptions: {
     successRedirect: string
     failureRedirect?: never
@@ -153,9 +159,9 @@ export class SupabaseStrategy extends
 
       // flash new data
       const currentPath = new URL(req.url).pathname
-      return this.success(res.data, req, this.sessionStorage, { ...options, successRedirect: options?.successRedirect ?? currentPath })
+      return this.success(this.sanitizeSession(res.data), req, this.sessionStorage, { ...options, successRedirect: options?.successRedirect ?? currentPath })
     }
 
-    return this.handleResult(req, options, session)
+    return this.handleResult(req, options, this.sanitizeSession(session))
   }
 }
