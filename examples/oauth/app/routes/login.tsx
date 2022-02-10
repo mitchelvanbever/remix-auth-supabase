@@ -1,5 +1,5 @@
 import type { LoaderFunction } from 'remix'
-import { Form, json, useLoaderData } from 'remix'
+import { json, useLoaderData } from 'remix'
 import { authenticator, oAuthStrategy, sessionStorage } from '~/auth.server'
 import { signInWithGithub } from '~/supabase.client'
 
