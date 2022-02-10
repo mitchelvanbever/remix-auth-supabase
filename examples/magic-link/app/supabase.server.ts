@@ -1,19 +1,26 @@
 import { createClient } from '@supabase/supabase-js'
+import type { ApiError, Session } from '@supabase/supabase-js'
 
 declare global {
-  interface Window {
-    env: {
+  namespace NodeJS {
+    interface ProcessEnv {
       SUPABASE_URL: string
+      SUPABASE_SERVICE_KEY: string
       PUBLIC_SUPABASE_ANON_KEY: string
+      SERVER_URL: string
     }
   }
+
 }
 
-if (!window.env.SUPABASE_URL)
-  throw new Error('SUPABASE_URL is required')
+if (!process.env.SUPABASE_URL)
+  throw new Error('ENV: SUPABASE_URL is required')
 
-if (!window.env.PUBLIC_SUPABASE_ANON_KEY)
-  throw new Error('PUBLIC_SUPABASE_ANON_KEY is required')
+if (!process.env.SUPABASE_SERVICE_KEY)
+  throw new Error('ENV: SUPABASE_SERVICE_KEY is required')
+
+if (!process.env.SERVER_URL)
+  throw new Error('ENV: SERVER_URL is required')
 
 // Supabase options example (build your own :))
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
@@ -29,13 +36,9 @@ if (!window.env.PUBLIC_SUPABASE_ANON_KEY)
 
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
-export const supabaseClient = createClient(
-  window.env.SUPABASE_URL,
-  window.env.PUBLIC_SUPABASE_ANON_KEY,
-  { autoRefreshToken: false, persistSession: false },
+export const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_KEY,
 )
 
-export const signInWithGithub = (redirectTo = 'http://localhost:3000/oauth/callback') =>
-  supabaseClient.auth.signIn({
-    provider: 'github',
-  }, { redirectTo })
+export { Session, ApiError }

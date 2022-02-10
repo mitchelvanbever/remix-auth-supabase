@@ -5,13 +5,13 @@ import { authenticator } from '~/auth.server'
 import { supabaseClient } from '~/supabase.client'
 
 export const action: ActionFunction = async({ request }) => {
-  await authenticator.authenticate('sb-oauth', request, {
+  await authenticator.authenticate('sb-magic-link', request, {
     successRedirect: '/private',
     failureRedirect: '/login',
   })
 }
 
-export default function OAuth() {
+export default function LoginCallback() {
   const submit = useSubmit()
 
   useEffect(() => {
