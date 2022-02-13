@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest'
 
+import { matchRequestUrl } from 'msw'
 import { user } from '../mocks/user'
 import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
 import { SESSION_KEY } from '../mocks/constants'
 import { validResponse } from '../mocks/handlers'
+import { server } from '../mocks/server'
 
 describe('[external export] revalidate', async() => {
   it('should redirect if cookie is not set', async() => {
@@ -93,5 +95,32 @@ describe('[external export] revalidate', async() => {
       expect(error.status).toEqual(302)
       expect(error.headers.get('Location')).toEqual('/dashboard')
     })
+  })
+  it('should handles simultaneous refresh token', async() => {
+    expect.assertions(1)
+    const sendRequests = new Map()
+
+    server.events.on('request:start', (req) => {
+      const matchesMethod = req.method === 'POST'
+      const matchesUrl = matchRequestUrl(req.url, '/supabase-project/auth/v1/token?grant_type=refresh_token', 'http://supabase-url.com').matches
+
+      if (matchesMethod && matchesUrl)
+        sendRequests.set(req.id, req)
+    })
+
+    const req = await authenticatedReq(new Request('https://localhost'),
+      {
+        user,
+        access_token: 'expired',
+        refresh_token: 'valid',
+      })
+
+    const simultaneousCalls = [supabaseStrategy.checkSession(req).catch(() => {}), supabaseStrategy.checkSession(req).catch(() => {})]
+
+    await Promise.all(simultaneousCalls)
+
+    server.events.removeAllListeners()
+
+    expect(sendRequests.size).toEqual(1)
   })
 })
