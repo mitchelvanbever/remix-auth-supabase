@@ -315,11 +315,4 @@ export class SupabaseStrategy extends Strategy<UserSession, VerifyParams> {
     // return new session if called from an action
     return this.handleResult(request, options, this.mapSession(newSession.data))
   }
-
-  async getSession(request: Request): Promise<Session> {
-    const sessionCookie = await this.sessionStorage.getSession(
-      request.headers.get('Cookie')
-    )
-    return sessionCookie.get(this.sessionKey)
-  }
 }
