@@ -1,7 +1,7 @@
 import { sessionStorage } from '../mocks/sessionStorage'
 import { SESSION_KEY } from '../mocks/constants'
 
-export type CookieInit = {
+export interface CookieInit {
   access_token?: string
   refresh_token?: string
   userId?: string

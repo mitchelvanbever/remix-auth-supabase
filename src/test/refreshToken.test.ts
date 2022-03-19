@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { matchRequestUrl, rest } from 'msw'
+import { matchRequestUrl } from 'msw'
 import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'

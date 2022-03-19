@@ -1,11 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { matchRequestUrl } from 'msw'
-import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
-import { REFRESH_ROUTE_PATH, SESSION_KEY } from '../mocks/constants'
-import { server } from '../mocks/server'
+import { REFRESH_ROUTE_PATH } from '../mocks/constants'
 import { validSession } from '../mocks/session'
 
 describe('checkSession', async () => {

@@ -7,13 +7,13 @@ import { verify } from '../mocks/authenticator'
 
 describe('strategy', () => {
   it('should throw if missing supabaseClient', () => {
-    // @ts-expect-error
+    // @ts-expect-error test
     expect(() => new SupabaseStrategy()).toThrow(
       'SupabaseStrategy : Constructor expected to receive a supabase client instance. Missing options.supabaseClient'
     )
   })
   it('should throw if missing sessionStorage', () => {
-    // @ts-expect-error
+    // @ts-expect-error test
     expect(() => new SupabaseStrategy({ supabaseClient })).toThrow(
       'SupabaseStrategy : Constructor expected to receive a session storage instance. Missing options.sessionStorage'
     )
@@ -21,7 +21,7 @@ describe('strategy', () => {
   it('should throw if missing verify function', () => {
     expect(
       () =>
-        // @ts-expect-error
+        // @ts-expect-error test
         new SupabaseStrategy({
           supabaseClient,
           sessionStorage,
@@ -36,7 +36,7 @@ describe('strategy', () => {
     expect(
       () =>
         new SupabaseStrategy(
-          // @ts-expect-error
+          // @ts-expect-error test
           { supabaseClient, sessionStorage, refreshRoutePath: '/refresh' },
           verify
         )
@@ -48,7 +48,7 @@ describe('strategy', () => {
     expect(
       () =>
         new SupabaseStrategy(
-          // @ts-expect-error
+          // @ts-expect-error test
           { supabaseClient, sessionStorage, refreshFailureRedirect: '/login' },
           verify
         )
