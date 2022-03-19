@@ -9,11 +9,9 @@ declare global {
       PUBLIC_SUPABASE_ANON_KEY: string
     }
   }
-
 }
 
-if (!process.env.SUPABASE_URL)
-  throw new Error('SUPABASE_URL is required')
+if (!process.env.SUPABASE_URL) throw new Error('SUPABASE_URL is required')
 
 if (!process.env.SUPABASE_SERVICE_KEY)
   throw new Error('SUPABASE_SERVICE_KEY is required')
@@ -34,7 +32,7 @@ if (!process.env.SUPABASE_SERVICE_KEY)
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
 export const supabaseAdmin = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
+  process.env.SUPABASE_SERVICE_KEY
 )
 
 export { Session }

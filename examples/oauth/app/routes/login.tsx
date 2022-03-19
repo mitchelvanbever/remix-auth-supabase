@@ -7,17 +7,15 @@ type LoaderData = {
   error: { message: string } | null
 }
 
-export const loader: LoaderFunction = async({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   await oAuthStrategy.checkSession(request, {
     successRedirect: '/private',
   })
 
-  const session = await sessionStorage.getSession(
-    request.headers.get('Cookie'),
-  )
+  const session = await sessionStorage.getSession(request.headers.get('Cookie'))
 
   const error = session.get(
-    authenticator.sessionErrorKey,
+    authenticator.sessionErrorKey
   ) as LoaderData['error']
 
   return json<LoaderData>({ error })
@@ -34,6 +32,5 @@ export default function Screen() {
         <button onClick={() => signInWithGithub()}>Sign in with Github</button>
       </p>
     </>
-
   )
 }

@@ -8,26 +8,93 @@ import { verify } from '../mocks/authenticator'
 describe('strategy', () => {
   it('should throw if missing supabaseClient', () => {
     // @ts-expect-error
-    expect(() => new SupabaseStrategy()).toThrow('SupabaseStrategy : Constructor expected to receive a supabase client instance. Missing options.supabaseClient')
+    expect(() => new SupabaseStrategy()).toThrow(
+      'SupabaseStrategy : Constructor expected to receive a supabase client instance. Missing options.supabaseClient'
+    )
   })
   it('should throw if missing sessionStorage', () => {
     // @ts-expect-error
-    expect(() => new SupabaseStrategy({ supabaseClient })).toThrow('SupabaseStrategy : Constructor expected to receive a session storage instance. Missing options.sessionStorage')
+    expect(() => new SupabaseStrategy({ supabaseClient })).toThrow(
+      'SupabaseStrategy : Constructor expected to receive a session storage instance. Missing options.sessionStorage'
+    )
   })
   it('should throw if missing verify function', () => {
-    // @ts-expect-error
-    expect(() => new SupabaseStrategy({ supabaseClient, sessionStorage })).toThrow('SupabaseStrategy : Constructor expected to receive a verify function. Missing verify')
+    expect(
+      () =>
+        // @ts-expect-error
+        new SupabaseStrategy({
+          supabaseClient,
+          sessionStorage,
+          refreshFailureRedirect: '/login',
+          refreshRoutePath: '/refresh',
+        })
+    ).toThrow(
+      'SupabaseStrategy : Constructor expected to receive a verify function. Missing verify'
+    )
+  })
+  it('should throw if missing refreshFailureRedirect', () => {
+    expect(
+      () =>
+        new SupabaseStrategy(
+          // @ts-expect-error
+          { supabaseClient, sessionStorage, refreshRoutePath: '/refresh' },
+          verify
+        )
+    ).toThrow(
+      'SupabaseStrategy : Constructor expected to receive a refreshFailureRedirect value. Missing options.refreshFailureRedirect'
+    )
+  })
+  it('should throw if missing refreshRoutePath', () => {
+    expect(
+      () =>
+        new SupabaseStrategy(
+          // @ts-expect-error
+          { supabaseClient, sessionStorage, refreshFailureRedirect: '/login' },
+          verify
+        )
+    ).toThrow(
+      'SupabaseStrategy : Constructor expected to receive a refreshRoutePath value. Missing options.refreshRoutePath'
+    )
   })
   it('should provide an instance', () => {
-    expect(() => new SupabaseStrategy({ supabaseClient, sessionStorage }, verify)).not.toThrow()
+    expect(
+      () =>
+        new SupabaseStrategy(
+          {
+            supabaseClient,
+            sessionStorage,
+            refreshFailureRedirect: '/login',
+            refreshRoutePath: '/refresh',
+          },
+          verify
+        )
+    ).not.toThrow()
   })
   it('should provide a default sessionKey and sessionErrorKey', () => {
-    const supabaseStrategy = new SupabaseStrategy({ supabaseClient, sessionStorage }, verify)
+    const supabaseStrategy = new SupabaseStrategy(
+      {
+        supabaseClient,
+        sessionStorage,
+        refreshFailureRedirect: '/login',
+        refreshRoutePath: '/refresh',
+      },
+      verify
+    )
     expect(supabaseStrategy.sessionKey).toBe('sb:session')
     expect(supabaseStrategy.sessionErrorKey).toBe('sb:error')
   })
   it('should provide a custom sessionKey and sessionErrorKey', () => {
-    const supabaseStrategy = new SupabaseStrategy({ supabaseClient, sessionStorage, sessionKey: '__session', sessionErrorKey: '__error' }, verify)
+    const supabaseStrategy = new SupabaseStrategy(
+      {
+        supabaseClient,
+        sessionStorage,
+        sessionKey: '__session',
+        sessionErrorKey: '__error',
+        refreshFailureRedirect: '/login',
+        refreshRoutePath: '/refresh',
+      },
+      verify
+    )
     expect(supabaseStrategy.sessionKey).toBe('__session')
     expect(supabaseStrategy.sessionErrorKey).toBe('__error')
   })

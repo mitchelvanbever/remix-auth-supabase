@@ -2,7 +2,6 @@
 
 Authentication using `signIn with magic link`.
 
-
 ## Preview
 
 Open this example on [CodeSandbox](https://codesandbox.com):
@@ -16,8 +15,10 @@ Open this example on [CodeSandbox](https://codesandbox.com):
 ```sh
 cp .env.example .env
 ```
+
 2. Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
 3. Add your `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`, `PUBLIC_SUPABASE_ANON_KEY` and `SERVER_URL` in `.env`
+
 ```env
 SUPABASE_SERVICE_KEY="{SERVICE_KEY}"
 PUBLIC_SUPABASE_ANON_KEY="{ANON_KEY}"
@@ -26,7 +27,7 @@ SERVER_URL="{YOUR_REMIX_SERVER_URL}"
 ```
 
 > In local env, `SERVER_URL` is `http://localhost:3000`
-> 
+>
 > In production, `SERVER_URL` is your remix server public URL
 
 ## Using the Remix Auth & SupabaseStrategy 🚀
@@ -35,13 +36,11 @@ SupabaseStrategy provides `checkSession` working like Remix Auth `isAuthenticate
 
 You must use `checkSession` instead of `isAuthenticated`
 
-
 ## Example
 
 This is using Remix Auth, `remix-auth-supabase` and `supabase-js` packages.
 
 > **⚠️ Never expose your `service_role` key in the browser**
-
 
 The `/login` route renders a form with a email and password input. After a submit it runs some validations and store `user` object, `access_token` and `refresh_token` in the session.
 

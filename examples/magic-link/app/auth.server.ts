@@ -1,8 +1,8 @@
 import { createCookieSessionStorage } from 'remix'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 import { SupabaseStrategy } from 'remix-auth-supabase'
+import type { UserSession } from 'remix-auth-supabase'
 import { supabaseAdmin } from '~/supabase.server'
-import type { Session } from '~/supabase.server'
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -21,8 +21,10 @@ export const magicLinkStrategy = new SupabaseStrategy(
     sessionStorage,
     sessionKey: 'sb:session',
     sessionErrorKey: 'sb:error',
+    refreshRoutePath: '/refresh',
+    refreshFailureRedirect: '/login',
   },
-  async({ req }) => {
+  async ({ req }) => {
     const form = await req.formData()
     const session = form?.get('session')
 
@@ -30,10 +32,10 @@ export const magicLinkStrategy = new SupabaseStrategy(
       throw new AuthorizationError('session not found')
 
     return JSON.parse(session)
-  },
+  }
 )
 
-export const authenticator = new Authenticator<Session>(sessionStorage, {
+export const authenticator = new Authenticator<UserSession>(sessionStorage, {
   sessionKey: magicLinkStrategy.sessionKey,
   sessionErrorKey: magicLinkStrategy.sessionErrorKey,
 })

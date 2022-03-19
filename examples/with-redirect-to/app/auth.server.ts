@@ -1,8 +1,8 @@
 import { createCookieSessionStorage } from 'remix'
 import { Authenticator, AuthorizationError } from 'remix-auth'
 import { SupabaseStrategy } from 'remix-auth-supabase'
+import type { UserSession } from 'remix-auth-supabase'
 import { supabaseClient } from '~/supabase'
-import type { Session } from '~/supabase'
 
 export const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -21,8 +21,10 @@ export const supabaseStrategy = new SupabaseStrategy(
     sessionStorage,
     sessionKey: 'sb:session',
     sessionErrorKey: 'sb:error',
+    refreshRoutePath: '/refresh',
+    refreshFailureRedirect: '/login',
   },
-  async({ req, supabaseClient }) => {
+  async ({ req, supabaseClient }) => {
     const form = await req.formData()
     const email = form?.get('email')
     const password = form?.get('password')
@@ -37,19 +39,19 @@ export const supabaseStrategy = new SupabaseStrategy(
 
     return supabaseClient.auth.api
       .signInWithEmail(email, password)
-      .then(({ data, error }): Session => {
+      .then(({ data, error }) => {
         if (error || !data) {
           throw new AuthorizationError(
-            error?.message ?? 'No user session found',
+            error?.message ?? 'No user session found'
           )
         }
 
         return data
       })
-  },
+  }
 )
 
-export const authenticator = new Authenticator<Session>(sessionStorage, {
+export const authenticator = new Authenticator<UserSession>(sessionStorage, {
   sessionKey: supabaseStrategy.sessionKey,
   sessionErrorKey: supabaseStrategy.sessionErrorKey,
 })

@@ -1,19 +1,22 @@
 import type { ActionFunction, LoaderFunction } from 'remix'
 import { Form, json, useLoaderData } from 'remix'
 import { authenticator, supabaseStrategy } from '~/auth.server'
+import { supabaseClient } from '~/supabase'
 
 type LoaderData = { email?: string }
 
-export const action: ActionFunction = async({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
   await authenticator.logout(request, { redirectTo: '/login' })
 }
 
-export const loader: LoaderFunction = async({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const session = await supabaseStrategy.checkSession(request, {
     failureRedirect: '/login?redirectTo=/private/profile',
   })
 
-  return json<LoaderData>({ email: session.user?.email })
+  const { user } = await supabaseClient.auth.api.getUser(session.access_token)
+
+  return json<LoaderData>({ email: user?.email })
 }
 
 export default function Screen() {

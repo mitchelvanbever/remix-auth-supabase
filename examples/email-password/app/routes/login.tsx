@@ -1,29 +1,29 @@
 import type { ActionFunction, LoaderFunction } from 'remix'
 import { Form, json, useLoaderData } from 'remix'
-import { authenticator, sessionStorage, supabaseStrategy } from '~/auth.server'
+import {
+  authenticator,
+  requireUserSession,
+  sessionStorage,
+} from '~/auth.server'
 
 type LoaderData = {
   error: { message: string } | null
 }
 
-export const action: ActionFunction = async({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
   await authenticator.authenticate('sb', request, {
     successRedirect: '/private',
     failureRedirect: '/login',
   })
 }
 
-export const loader: LoaderFunction = async({ request }) => {
-  await supabaseStrategy.checkSession(request, {
-    successRedirect: '/private',
-  })
+export const loader: LoaderFunction = async ({ request }) => {
+  await requireUserSession(request, { successRedirect: '/private' })
 
-  const session = await sessionStorage.getSession(
-    request.headers.get('Cookie'),
-  )
+  const session = await sessionStorage.getSession(request.headers.get('Cookie'))
 
   const error = session.get(
-    authenticator.sessionErrorKey,
+    authenticator.sessionErrorKey
   ) as LoaderData['error']
 
   return json<LoaderData>({ error })

@@ -9,8 +9,7 @@ declare global {
   }
 }
 
-if (!window.env.SUPABASE_URL)
-  throw new Error('SUPABASE_URL is required')
+if (!window.env.SUPABASE_URL) throw new Error('SUPABASE_URL is required')
 
 if (!window.env.PUBLIC_SUPABASE_ANON_KEY)
   throw new Error('PUBLIC_SUPABASE_ANON_KEY is required')
@@ -32,5 +31,5 @@ if (!window.env.PUBLIC_SUPABASE_ANON_KEY)
 export const supabaseClient = createClient(
   window.env.SUPABASE_URL,
   window.env.PUBLIC_SUPABASE_ANON_KEY,
-  { autoRefreshToken: false, persistSession: false },
+  { autoRefreshToken: false, persistSession: false }
 )

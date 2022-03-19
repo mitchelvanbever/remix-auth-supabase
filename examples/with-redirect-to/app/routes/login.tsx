@@ -6,7 +6,7 @@ type LoaderData = {
   error: { message: string } | null
 }
 
-export const action: ActionFunction = async({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
   const data = await request.clone().formData()
   const redirectTo = (data.get('redirectTo') ?? '/private') as string
 
@@ -16,19 +16,18 @@ export const action: ActionFunction = async({ request }) => {
   })
 }
 
-export const loader: LoaderFunction = async({ request }) => {
-  const redirectTo = new URL(request.url).searchParams.get('redirectTo') ?? '/private'
+export const loader: LoaderFunction = async ({ request }) => {
+  const redirectTo =
+    new URL(request.url).searchParams.get('redirectTo') ?? '/private'
 
   await supabaseStrategy.checkSession(request, {
     successRedirect: redirectTo,
   })
 
-  const session = await sessionStorage.getSession(
-    request.headers.get('Cookie'),
-  )
+  const session = await sessionStorage.getSession(request.headers.get('Cookie'))
 
   const error = session.get(
-    authenticator.sessionErrorKey,
+    authenticator.sessionErrorKey
   ) as LoaderData['error']
 
   return json<LoaderData>({ error })

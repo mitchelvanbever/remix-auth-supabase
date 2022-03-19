@@ -12,30 +12,31 @@ type ActionData = {
   error: ApiError | null
 }
 
-export const loader: LoaderFunction = async({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   await magicLinkStrategy.checkSession(request, {
     successRedirect: '/private',
   })
 
-  const session = await sessionStorage.getSession(
-    request.headers.get('Cookie'),
-  )
+  const session = await sessionStorage.getSession(request.headers.get('Cookie'))
 
   const error = session.get(
-    authenticator.sessionErrorKey,
+    authenticator.sessionErrorKey
   ) as LoaderData['error']
 
   return json<LoaderData>({ error })
 }
 
-export const action: ActionFunction = async({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
   const form = await request.clone().formData()
   const email = form?.get('email')
 
   if (!email) return json({ error: { message: 'Email is required' } }, 400)
-  if (typeof email !== 'string') return json({ error: { message: 'Email must be a string' } }, 400)
+  if (typeof email !== 'string')
+    return json({ error: { message: 'Email must be a string' } }, 400)
 
-  const { error } = await supabaseAdmin.auth.api.sendMagicLinkEmail(email, { redirectTo: `${process.env.SERVER_URL}/login/callback` })
+  const { error } = await supabaseAdmin.auth.api.sendMagicLinkEmail(email, {
+    redirectTo: `${process.env.SERVER_URL}/login/callback`,
+  })
 
   if (error) return json({ error: { message: error.message } }, error.status)
 
@@ -53,7 +54,9 @@ export default function Screen() {
         <label htmlFor="email">Email</label>
         <input type="email" name="email" id="email" />
       </div>
-      <button>{transition.submission ? 'Sending you a magic link' : 'Send Magic Link'}</button>
+      <button>
+        {transition.submission ? 'Sending you a magic link' : 'Send Magic Link'}
+      </button>
     </Form>
   )
 }

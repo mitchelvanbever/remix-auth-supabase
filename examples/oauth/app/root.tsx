@@ -34,9 +34,7 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.env = ${JSON.stringify(
-              env,
-            )}`,
+            __html: `window.env = ${JSON.stringify(env)}`,
           }}
         />
         <Scripts />
