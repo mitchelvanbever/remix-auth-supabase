@@ -36,6 +36,25 @@ describe('refreshToken', async () => {
     })
   })
 
+  it('should return a refreshed token when request method is not GET', async () => {
+    expect.assertions(1)
+    const req = await authenticatedReq(
+      new Request(
+        `https://localhost${REFRESH_ROUTE_PATH}?redirectTo=%2Fprofile`,
+        { method: 'POST' }
+      ),
+      {
+        access_token: 'expired',
+        refresh_token: 'valid',
+        userId: '05ae8d59-49f0-5a69-b014-af9aec9cc90d',
+      }
+    )
+
+    await supabaseStrategy.refreshToken(req).then(async (res) => {
+      expect(res).toEqual(validSession)
+    })
+  })
+
   it('should redirect if missing redirectTo', async () => {
     expect.assertions(4)
 
@@ -75,6 +94,42 @@ describe('refreshToken', async () => {
     server.events.removeAllListeners()
 
     expect(sendRequests.size).toEqual(0)
+  })
+
+  it('should not redirect if missing redirectTo and request method is not GET', async () => {
+    expect.assertions(2)
+
+    const sendRequests = new Map()
+
+    server.events.on('request:start', (req) => {
+      const matchesMethod = req.method === 'POST'
+      const matchesUrl = matchRequestUrl(
+        req.url,
+        '/supabase-project/auth/v1/token?grant_type=refresh_token',
+        'http://supabase-url.com'
+      ).matches
+
+      if (matchesMethod && matchesUrl) sendRequests.set(req.id, req)
+    })
+
+    const currentSession = {
+      access_token: 'expired',
+      refresh_token: 'valid',
+      expires_at: -1,
+      userId: '05ae8d59-49f0-5a69-b014-af9aec9cc90d',
+    }
+    const req = await authenticatedReq(
+      new Request(`https://localhost${REFRESH_ROUTE_PATH}`, { method: 'POST' }),
+      currentSession
+    )
+
+    await supabaseStrategy.refreshToken(req).then(async (res) => {
+      expect(res).toEqual(validSession)
+    })
+
+    server.events.removeAllListeners()
+
+    expect(sendRequests.size).toEqual(1)
   })
 
   it('should redirect if no refresh_token found in session', async () => {

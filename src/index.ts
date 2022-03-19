@@ -1,5 +1,5 @@
 /* eslint-disable brace-style */
-import type { SessionStorage } from '@remix-run/server-runtime'
+import type { Session, SessionStorage } from '@remix-run/server-runtime'
 import { redirect } from '@remix-run/server-runtime'
 import type {
   ApiError,
@@ -162,7 +162,7 @@ export class SupabaseStrategy extends Strategy<UserSession, VerifyParams> {
   }
 
   private async handleRefreshToken(refreshToken: string): Promise<{
-    data: UserSession | null
+    data: SupabaseSession | null
     error: ApiError | null
   }> {
     const [data, error] = await handlePromise(
@@ -239,8 +239,14 @@ export class SupabaseStrategy extends Strategy<UserSession, VerifyParams> {
 
     const user = await this.getUser(session.access_token)
 
+    console.log('req.method', req.method)
     // access token expires, time to refresh !
     if (!user || user?.error) {
+      // try to refresh here if called from an action
+      if (req.method !== 'GET') {
+        return null
+      }
+
       const searchParams = new URLSearchParams([
         [this.redirectTo, new URL(req.url).pathname],
       ])
@@ -250,17 +256,18 @@ export class SupabaseStrategy extends Strategy<UserSession, VerifyParams> {
     return this.handleResult(req, options, session)
   }
 
-  async refreshToken(request: Request) {
+  async refreshToken(request: Request): Promise<UserSession | null> {
     const options: AuthenticateOptions = {
       sessionKey: this.sessionKey,
       sessionErrorKey: this.sessionErrorKey,
       failureRedirect: this.refreshFailureRedirect,
     }
 
-    const redirectTo = new URL(request.url).searchParams.get(this.redirectTo)
+    const redirectTo =
+      new URL(request.url).searchParams.get(this.redirectTo) || undefined
 
-    // if malformed url, redirect to refreshFailureRedirect
-    if (!redirectTo)
+    // if malformed url and request method is GET, redirect to refreshFailureRedirect
+    if (!redirectTo && request.method === 'GET')
       return this.handleResult(
         request,
         options,
@@ -295,11 +302,25 @@ export class SupabaseStrategy extends Strategy<UserSession, VerifyParams> {
       })
     }
 
-    // flash new data and go back where we came from
-    return this.handleResult(
-      request,
-      { ...options, successRedirect: redirectTo },
-      newSession.data
+    // flash new data and go back where we came from if called from a loader
+    if (request.method === 'GET')
+      return this.handleResult(
+        request,
+        {
+          ...options,
+          successRedirect: redirectTo,
+        },
+        newSession.data
+      )
+
+    // return new session if called from an action
+    return this.handleResult(request, options, this.mapSession(newSession.data))
+  }
+
+  async getSession(request: Request): Promise<Session> {
+    const sessionCookie = await this.sessionStorage.getSession(
+      request.headers.get('Cookie')
     )
+    return sessionCookie.get(this.sessionKey)
   }
 }

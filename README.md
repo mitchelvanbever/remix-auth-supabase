@@ -205,6 +205,56 @@ if (session) {
 }
 ```
 
+##### Refresh token on Action
+
+If you want to refresh token during an action, you can !
+
+⚠️ Don't forget to commit this new token in your header
+
+⚠️ If token is unable to refresh, session is destroy and user is redirect to `refreshFailureRedirect` for security reasons
+
+> https://remix.run/docs/en/v1/api/remix#using-sessions
+
+```javascript
+import type { ActionFunction } from 'remix'
+import { json } from 'remix'
+import { AuthorizationError } from 'remix-auth'
+import { sessionStorage, supabaseStrategy } from '~/auth.server'
+import { supabaseClient } from '~/supabase'
+
+export const action: ActionFunction = async ({ request }) => {
+  let userSession = await supabaseStrategy.checkSession(request)
+
+  if (!userSession) {
+    userSession = await supabaseStrategy.refreshToken(request)
+  }
+
+  if (!userSession) throw new AuthorizationError()
+
+  // or any function needing user access_token
+  const { user } = await supabaseClient.auth.api.getUser(
+    userSession.access_token
+  )
+
+  // mandatory, more info here :
+  // https://remix.run/docs/en/v1/api/remix#using-sessions
+  const sessionCookie = await sessionStorage.getSession(
+    request.headers.get('Cookie')
+  )
+  sessionCookie.set(supabaseStrategy.sessionKey, userSession)
+
+  return json(
+    { user },
+    {
+      // ⚠️ please, don't forget me
+      headers: {
+        'Set-Cookie': await sessionStorage.commitSession(sessionCookie),
+      },
+    }
+  )
+}
+```
+
 ### Tips
 
 #### Prevent infinite loop 😱

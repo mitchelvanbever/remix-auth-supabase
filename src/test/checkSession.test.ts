@@ -65,4 +65,19 @@ describe('checkSession', async () => {
       )
     })
   })
+  it('should return null if token is expired and request method is not GET', async () => {
+    expect.assertions(1)
+    const req = await authenticatedReq(
+      new Request('https://localhost/private', { method: 'POST' }),
+      {
+        access_token: 'expired',
+        refresh_token: 'invalid',
+        userId: '05ae8d59-49f0-5a69-b014-af9aec9cc90d',
+      }
+    )
+
+    await supabaseStrategy.checkSession(req).then((res) => {
+      expect(res).toBeNull()
+    })
+  })
 })
