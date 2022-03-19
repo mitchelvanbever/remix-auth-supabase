@@ -239,7 +239,6 @@ export class SupabaseStrategy extends Strategy<UserSession, VerifyParams> {
 
     const user = await this.getUser(session.access_token)
 
-    console.log('req.method', req.method)
     // access token expires, time to refresh !
     if (!user || user?.error) {
       // try to refresh here if called from an action
