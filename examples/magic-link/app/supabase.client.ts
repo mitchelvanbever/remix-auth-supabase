@@ -34,8 +34,3 @@ export const supabaseClient = createClient(
   window.env.PUBLIC_SUPABASE_ANON_KEY,
   { autoRefreshToken: false, persistSession: false },
 )
-
-export const signInWithGithub = (redirectTo = 'http://localhost:3000/oauth/callback') =>
-  supabaseClient.auth.signIn({
-    provider: 'github',
-  }, { redirectTo })
