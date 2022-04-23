@@ -7,15 +7,15 @@ import { verify } from '../mocks/authenticator'
 
 describe('strategy', () => {
   it('should throw if missing supabaseClient', () => {
-    // @ts-expect-error
+    // @ts-expect-error should throw if missing supabaseClient
     expect(() => new SupabaseStrategy()).toThrow('SupabaseStrategy : Constructor expected to receive a supabase client instance. Missing options.supabaseClient')
   })
   it('should throw if missing sessionStorage', () => {
-    // @ts-expect-error
+    // @ts-expect-error missing sessionStorage
     expect(() => new SupabaseStrategy({ supabaseClient })).toThrow('SupabaseStrategy : Constructor expected to receive a session storage instance. Missing options.sessionStorage')
   })
   it('should throw if missing verify function', () => {
-    // @ts-expect-error
+    // @ts-expect-error missing verify function
     expect(() => new SupabaseStrategy({ supabaseClient, sessionStorage })).toThrow('SupabaseStrategy : Constructor expected to receive a verify function. Missing verify')
   })
   it('should provide an instance', () => {

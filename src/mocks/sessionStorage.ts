@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from '@remix-run/server-runtime'
+import { createCookieSessionStorage } from '@remix-run/node'
 
 // You will probably need a sessionStorage to test the strategy.
 export const sessionStorage = createCookieSessionStorage({

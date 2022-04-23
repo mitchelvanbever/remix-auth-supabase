@@ -10,7 +10,8 @@ export const handlers = [
     const { email, password, refresh_token } = JSON.parse(req.body as string)
 
     if (refresh_token) {
-      if (refresh_token !== 'valid') return res(ctx.status(401), ctx.json({ error: 'Token expired' }))
+      if (refresh_token !== 'valid')
+        return res(ctx.status(401), ctx.json({ error: 'Token expired' }))
       return res(ctx.status(200), ctx.json(validResponse))
     }
 
@@ -21,7 +22,8 @@ export const handlers = [
   rest.get('http://supabase-url.com/supabase-project/auth/v1/user', async(req, res, ctx) => {
     const token = req.headers.get('authorization')?.split('Bearer ')?.[1]
 
-    if (token !== 'valid') return res(ctx.status(401), ctx.json({ error: 'Token expired', user: null }))
+    if (token !== 'valid')
+      return res(ctx.status(401), ctx.json({ error: 'Token expired', user: null }))
     return res(ctx.status(200), ctx.json({ user }))
   }),
   rest.get('https://localhosted:6969/profile', (req, res, ctx) => {

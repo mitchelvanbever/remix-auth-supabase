@@ -33,31 +33,36 @@
     "README.md"
   ],
   "peerDependencies": {
-    "@remix-run/server-runtime": "^1.0.0"
+    "@remix-run/server-runtime": "1.4.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.14.0",
-    "@faker-js/faker": "^6.0.0",
-    "@remix-run/node": "^1.1.1",
-    "@remix-run/react": "^1.1.1",
-    "@remix-run/server-runtime": "^1.1.1",
-    "@supabase/supabase-js": "^1.29.1",
-    "@types/faker": "^5.5.9",
-    "@types/react": "^17.0.38",
-    "@vitest/ui": "^0.7.11",
-    "c8": "^7.10.0",
-    "eslint": "^7.26.0",
-    "formdata-polyfill": "^4.0.10",
-    "msw": "^0.36.3",
-    "react": "^17.0.2",
-    "typescript": "^4.3.5",
-    "vite": "^2.7.6",
-    "vitest": "^0.7.11"
+    "@antfu/eslint-config": "0.20.7",
+    "@faker-js/faker": "6.2.0",
+    "@remix-run/node": "1.4.1",
+    "@remix-run/react": "1.4.1",
+    "@remix-run/server-runtime": "1.4.1",
+    "@supabase/supabase-js": "1.35.2",
+    "@types/react": "18.0.6",
+    "@vitest/ui": "0.9.4",
+    "c8": "7.11.2",
+    "cz-conventional-changelog": "3.3.0",
+    "eslint": "8.14.0",
+    "formdata-polyfill": "4.0.10",
+    "msw": "0.39.2",
+    "react": "18.0.0",
+    "typescript": "4.6.3",
+    "vite": "2.9.5",
+    "vitest": "0.9.4"
   },
   "dependencies": {
-    "remix-auth": "^3.2.1"
+    "remix-auth": "3.2.1"
   },
   "eslintConfig": {
     "extends": "@antfu/eslint-config"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
