@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
-
 import { matchRequestUrl } from 'msw'
-import { user } from '../mocks/user'
+
+import { concurrentUserA, concurrentUserB, user } from '../mocks/user'
 import { sessionStorage } from '../mocks/sessionStorage'
 import { supabaseStrategy } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
@@ -48,7 +48,7 @@ describe('[external export] revalidate', async() => {
       {
         failureRedirect: '/login',
       },
-    ).then(session => expect(session).toEqual(validResponse))
+    ).then(session => expect(session).toEqual({ ...validResponse, user }))
   })
   it('should return null if refresh token fails', async() => {
     expect.assertions(1)
@@ -59,8 +59,7 @@ describe('[external export] revalidate', async() => {
         refresh_token: 'invalid',
       })
 
-    await supabaseStrategy.checkSession(req,
-    ).then(res => expect(res).toBe(null))
+    await supabaseStrategy.checkSession(req).then(res => expect(res).toBe(null))
   })
   it('should refresh the token with a valid refresh token', async() => {
     expect.assertions(3)
@@ -68,33 +67,32 @@ describe('[external export] revalidate', async() => {
       {
         user,
         access_token: 'expired',
-        refresh_token: 'valid',
+        refresh_token: 'userA',
       })
 
-    await supabaseStrategy.checkSession(req,
-    ).catch(async(error) => {
+    await supabaseStrategy.checkSession(req).catch(async(error) => {
       const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
-      expect(cookies?.[SESSION_KEY]).toEqual(validResponse)
+      expect(cookies?.[SESSION_KEY]).toEqual({ ...validResponse, ...concurrentUserA })
       expect(error.status).toEqual(302)
       expect(error.headers.get('Location')).toEqual('/profile')
     })
   })
-  it('should refresh the token with a valid refresh token and redirect is successRedirect is set', async() => {
+  it('should refresh the token with a valid refresh token and redirect if successRedirect is set', async() => {
     expect.assertions(3)
     const req = await authenticatedReq(new Request('https://localhost'),
       {
         user,
         access_token: 'expired',
-        refresh_token: 'valid',
+        refresh_token: 'userA',
       })
 
-    await supabaseStrategy.checkSession(req, { successRedirect: '/dashboard' },
-    ).catch(async(error) => {
-      const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
-      expect(cookies?.[SESSION_KEY]).toEqual(validResponse)
-      expect(error.status).toEqual(302)
-      expect(error.headers.get('Location')).toEqual('/dashboard')
-    })
+    await supabaseStrategy.checkSession(req, { successRedirect: '/dashboard' })
+      .catch(async(error) => {
+        const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data
+        expect(cookies?.[SESSION_KEY]).toEqual({ ...validResponse, ...concurrentUserA })
+        expect(error.status).toEqual(302)
+        expect(error.headers.get('Location')).toEqual('/dashboard')
+      })
   })
   it('should handles simultaneous refresh token', async() => {
     expect.assertions(1)
@@ -110,17 +108,32 @@ describe('[external export] revalidate', async() => {
 
     const req = await authenticatedReq(new Request('https://localhost'),
       {
-        user,
+        user: concurrentUserA,
         access_token: 'expired',
-        refresh_token: 'valid',
+        refresh_token: 'userA',
       })
 
-    const simultaneousCalls = [supabaseStrategy.checkSession(req).catch(() => {}), supabaseStrategy.checkSession(req).catch(() => {})]
+    const otherReq = await authenticatedReq(new Request('https://localhost'), {
+      user: concurrentUserB,
+      access_token: 'expired',
+      refresh_token: 'userB',
+    })
 
-    await Promise.all(simultaneousCalls)
+    await Promise.all([
+      supabaseStrategy.checkSession(otherReq).catch(() => {}),
+      supabaseStrategy.checkSession(req).catch(() => {}),
+      supabaseStrategy.checkSession(req).catch(() => {}),
+      supabaseStrategy.checkSession(otherReq).catch(() => {}),
+      supabaseStrategy.checkSession(otherReq).catch(() => {}),
+      supabaseStrategy.checkSession(otherReq).catch(() => {}),
+      supabaseStrategy.checkSession(otherReq).catch(() => {}),
+      supabaseStrategy.checkSession(otherReq).catch(() => {}),
+    ])
 
     server.events.removeAllListeners()
 
-    expect(sendRequests.size).toEqual(1)
+    console.log(sendRequests)
+
+    expect(sendRequests.size).toEqual(2)
   })
 })

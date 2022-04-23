@@ -15,11 +15,7 @@ export const getCookieHeader = async(req: Request, cookie: any) => {
 export const getSessionFromCookie = async(req: Request) =>
   (await sessionStorage.getSession(req.headers.get('Cookie')))?.data
 
-export const getResWithSession
-  = async(req: Request, cookieInit: CookieInit = { refresh_token: 'valid', access_token: 'valid', user }) =>
-    fetch(
-      new Request('https://localhosted:6969/profile',
-        {
-          ...(await getCookieHeader(req, cookieInit)),
-        },
-      ))
+export const getResWithSession = async(req: Request, cookieInit: CookieInit = { refresh_token: 'valid', access_token: 'valid', user }) =>
+  fetch(new Request('https://localhosted:6969/profile',
+    { ...(await getCookieHeader(req, cookieInit)) },
+  ))

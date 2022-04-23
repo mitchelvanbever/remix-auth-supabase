@@ -48,10 +48,10 @@ export type CheckOptions =
 
 export class SupabaseStrategy extends
   Strategy<Session, VerifyParams> {
-  private static pendingHandleRefreshToken: Promise<{
+  private static pendingRefreshes: Map<string, Promise<{
     data: Session | null
     error: ApiError | null
-  }> | null = null
+  }>> = new Map()
 
   name = 'sb'
   readonly sessionKey: string
@@ -149,22 +149,27 @@ export class SupabaseStrategy extends
       return this.handleResult(req, options, 'No session data found', true)
 
     const user = await this.getUser(session.access_token)
+    const id = session?.user?.id ?? 'anon'
 
     if (!user || user?.error) {
-      if (!SupabaseStrategy.pendingHandleRefreshToken)
-        SupabaseStrategy.pendingHandleRefreshToken = this.handleRefreshToken(session.refresh_token)
+      if (!SupabaseStrategy.pendingRefreshes.has(id))
+        SupabaseStrategy.pendingRefreshes.set(id, this.handleRefreshToken(session.refresh_token!))
 
-      const [res, error] = await handlePromise(SupabaseStrategy.pendingHandleRefreshToken).then((newSession) => {
-        SupabaseStrategy.pendingHandleRefreshToken = null
-        return newSession
-      })
+      const pendingRefresh = SupabaseStrategy.pendingRefreshes.get(id)
 
-      if (!res?.data || res?.error || error)
-        return this.handleResult(req, options, 'Could not refresh session', true)
+      if (pendingRefresh) {
+        const [res, error] = await handlePromise(pendingRefresh).then((newSession) => {
+          SupabaseStrategy.pendingRefreshes.delete(id)
+          return newSession
+        })
 
-      // flash new data
-      const currentPath = new URL(req.url).pathname
-      return this.success(res.data, req, this.sessionStorage, { ...options, successRedirect: options?.successRedirect ?? currentPath })
+        if (!res?.data || res?.error || error)
+          return this.handleResult(req, options, 'Could not refresh session', true)
+
+        // flash new data
+        const currentPath = new URL(req.url).pathname
+        return this.success(res.data, req, this.sessionStorage, { ...options, successRedirect: options?.successRedirect ?? currentPath })
+      }
     }
 
     return this.handleResult(req, options, session)

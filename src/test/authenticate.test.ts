@@ -42,6 +42,6 @@ describe('authenticate', async() => {
         method: 'POST',
         body: fData,
       },
-    )).then(res => expect(res).toEqual(validResponse))
+    )).then(res => expect(res).toEqual({ ...validResponse, user: { email: user.email } }))
   })
 })

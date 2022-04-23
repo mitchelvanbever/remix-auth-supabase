@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import { authenticator } from '../mocks/authenticator'
 import { authenticatedReq } from '../mocks/requests'
 import { validResponse } from '../mocks/handlers'
+import { user } from '../mocks/user'
 
 describe('isAuthenticated', async() => {
   it('should return null', async() => {
@@ -25,6 +26,6 @@ describe('isAuthenticated', async() => {
   it('should return the session', async() => {
     const req = await authenticatedReq()
     const isAuthenticated = await authenticator.isAuthenticated(req)
-    expect(isAuthenticated).toEqual(validResponse)
+    expect(isAuthenticated).toEqual({ ...validResponse, user })
   })
 })
