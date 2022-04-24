@@ -27,11 +27,13 @@ export const supabaseStrategy = new SupabaseStrategy(
     const email = form?.get('email')
     const password = form?.get('password')
 
-    if (!email) throw new AuthorizationError('Email is required')
+    if (!email)
+      throw new AuthorizationError('Email is required')
     if (typeof email !== 'string')
       throw new AuthorizationError('Email must be a string')
 
-    if (!password) throw new AuthorizationError('Password is required')
+    if (!password)
+      throw new AuthorizationError('Password is required')
     if (typeof password !== 'string')
       throw new AuthorizationError('Password must be a string')
 
