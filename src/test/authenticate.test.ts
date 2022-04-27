@@ -51,6 +51,6 @@ describe('authenticate', async () => {
           body: fData
         })
       )
-      .then((res) => expect(res).toEqual({ ...validResponse, user: { email: user.email } }));
+      .then((res) => expect(res).toEqual({ ...validResponse, user: { id: user.id } }));
   });
 });

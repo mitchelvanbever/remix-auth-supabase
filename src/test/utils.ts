@@ -8,6 +8,7 @@ export interface CookieInit {
   user: Partial<User>;
   access_token: string;
   refresh_token: string;
+  token_type: string;
 }
 
 export const getCookieHeader = async (req: Request, cookie: any) => {
@@ -26,7 +27,8 @@ export const getResWithSession = async (
   cookieInit: CookieInit = {
     refresh_token: 'valid',
     access_token: 'valid',
-    user
+    token_type: 'grant',
+    user: { id: user.id }
   }
 ) =>
   fetch(

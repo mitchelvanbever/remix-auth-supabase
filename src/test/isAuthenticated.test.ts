@@ -25,6 +25,6 @@ describe('isAuthenticated', async () => {
   it('should return the session', async () => {
     const req = await authenticatedReq();
     const isAuthenticated = await authenticator.isAuthenticated(req);
-    expect(isAuthenticated).toEqual({ ...validResponse, user });
+    expect(isAuthenticated).toEqual({ ...validResponse, user: { id: user.id } });
   });
 });

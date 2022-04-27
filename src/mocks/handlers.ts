@@ -3,7 +3,8 @@ import { concurrentUserA, concurrentUserB, user, password as userPassword } from
 
 export const validResponse = {
   refresh_token: 'valid',
-  access_token: 'valid'
+  access_token: 'valid',
+  token_type: 'grant'
 };
 
 export const handlers = [
@@ -11,19 +12,21 @@ export const handlers = [
     const { email, password, refresh_token } = JSON.parse(req.body as string);
 
     if (refresh_token) {
-      if (refresh_token === 'userA') return res(ctx.status(200), ctx.json({ ...validResponse, ...concurrentUserA }));
+      if (refresh_token === 'userA')
+        return res(ctx.status(200), ctx.json({ ...validResponse, user: { id: concurrentUserA.id } }));
 
-      if (refresh_token === 'userB') return res(ctx.status(200), ctx.json({ ...validResponse, ...concurrentUserB }));
+      if (refresh_token === 'userB')
+        return res(ctx.status(200), ctx.json({ ...validResponse, user: { id: concurrentUserB.id } }));
 
       if (refresh_token !== 'valid') return res(ctx.status(401), ctx.json({ error: 'Token expired' }));
 
-      return res(ctx.status(200), ctx.json({ ...validResponse, user: { email } }));
+      return res(ctx.status(200), ctx.json({ ...validResponse, user: { id: user.id } }));
     }
 
     if (!email || !password || password !== userPassword)
       return res(ctx.status(401), ctx.json({ message: 'Wrong email or password' }));
 
-    return res(ctx.status(200), ctx.json({ ...validResponse, user: { email } }));
+    return res(ctx.status(200), ctx.json({ ...validResponse, user: { id: user.id } }));
   }),
   rest.get('http://supabase-url.com/supabase-project/auth/v1/user', async (req, res, ctx) => {
     const token = req.headers.get('authorization')?.split('Bearer ')?.[1];

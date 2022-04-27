@@ -46,14 +46,15 @@ describe('[external export] revalidate', async () => {
       .checkSession(req, {
         failureRedirect: '/login'
       })
-      .then((session) => expect(session).toEqual({ ...validResponse, user }));
+      .then((session) => expect(session).toEqual({ ...validResponse, user: { id: user.id } }));
   });
   it('should return null if refresh token fails', async () => {
     expect.assertions(1);
     const req = await authenticatedReq(new Request('https://localhost'), {
       user,
       access_token: 'expired',
-      refresh_token: 'invalid'
+      refresh_token: 'invalid',
+      token_type: 'grant'
     });
 
     await supabaseStrategy.checkSession(req).then((res) => expect(res).toBe(null));
@@ -63,14 +64,15 @@ describe('[external export] revalidate', async () => {
     const req = await authenticatedReq(new Request('https://localhost/profile'), {
       user,
       access_token: 'expired',
-      refresh_token: 'userA'
+      refresh_token: 'userA',
+      token_type: 'grant'
     });
 
     await supabaseStrategy.checkSession(req).catch(async (error) => {
       const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data;
       expect(cookies?.[SESSION_KEY]).toEqual({
         ...validResponse,
-        ...concurrentUserA
+        user: { id: concurrentUserA.id }
       });
       expect(error.status).toEqual(302);
       expect(error.headers.get('Location')).toEqual('/profile');
@@ -81,14 +83,17 @@ describe('[external export] revalidate', async () => {
     const req = await authenticatedReq(new Request('https://localhost'), {
       user,
       access_token: 'expired',
-      refresh_token: 'userA'
+      refresh_token: 'userA',
+      token_type: 'grant'
     });
 
     await supabaseStrategy.checkSession(req, { successRedirect: '/dashboard' }).catch(async (error) => {
       const cookies = (await sessionStorage.getSession(error.headers.get('Set-Cookie')))?.data;
       expect(cookies?.[SESSION_KEY]).toEqual({
         ...validResponse,
-        ...concurrentUserA
+        user: {
+          id: concurrentUserA.id
+        }
       });
       expect(error.status).toEqual(302);
       expect(error.headers.get('Location')).toEqual('/dashboard');
@@ -112,13 +117,15 @@ describe('[external export] revalidate', async () => {
     const req = await authenticatedReq(new Request('https://localhost'), {
       user: concurrentUserA,
       access_token: 'expired',
-      refresh_token: 'userA'
+      refresh_token: 'userA',
+      token_type: 'grant'
     });
 
     const otherReq = await authenticatedReq(new Request('https://localhost'), {
       user: concurrentUserB,
       access_token: 'expired',
-      refresh_token: 'userB'
+      refresh_token: 'userB',
+      token_type: 'grant'
     });
 
     await Promise.all([
