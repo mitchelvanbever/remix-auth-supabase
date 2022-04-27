@@ -4,6 +4,18 @@
 
 This strategy aims to provide an easy way to start using supabase authentication on [Remix.run](https://remix.run/) with [remix-auth](https://github.com/sergiodxa/remix-auth) bootstrapped with [remix-auth-template](https://github.com/sergiodxa/remix-auth-strategy-template)) (thanks [@sergiodxa](https://github.com/sergiodxa) 🚀).
 
+
+### NOTICE 🚧
+> * This library is maintained by people who **do not** make a living creating and maintining open source libraries, it's just a hobby and life takes priority over hobbies.
+> * *Remix-auth-strategy-template* was not designed with the intention to handle everything that we currently handle (refreshing tokens for example). This unfortunately can lead to scenarios where some of the features may not work as expected or can lead to unexpected behavior (beware).
+>
+> Due to amount of "issues" we've already tackled in regards to the extensive feature set we provide, we're unable to guarantee the stability of this library for production usage.
+> Having all of this said, we're happy to keep this library alive for anyone who wants to (keep) using it.
+
+
+Our *official* recommendation is to use [this stack by RPHLMR](https://github.com/rphlmr/supa-fly-stack) for production grade remix applications that work with supabase.
+
+
 ## Supported runtimes
 
 | Runtime    | Has Support |
