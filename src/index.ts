@@ -82,12 +82,28 @@ export class SupabaseStrategy extends Strategy<Session, VerifyParams> {
     this.sessionErrorKey = options.sessionErrorKey ?? 'sb:error';
   }
 
+  protected success(session: Session, request: Request, sessionStorage: SessionStorage, options: AuthenticateOptions) {
+    /** @ts-expect-error partial user does not comply with the User object */
+    return super.success(this.mapSession(session), request, sessionStorage, options);
+  }
+
   async authenticate(req: Request, sessionStorage: SessionStorage, options: AuthenticateOptions): Promise<Session> {
     const [data, error] = await handlePromise(this.verify({ req, supabaseClient: this.supabaseClient }));
 
     if (error || !data) return this.failure((error as Error)?.message ?? 'No user found', req, sessionStorage, options);
 
     return this.success(data, req, sessionStorage, options);
+  }
+
+  private mapSession(
+    session: Session
+  ): Pick<Session, 'access_token' | 'refresh_token' | 'token_type'> & { user: { id?: string | undefined } } {
+    return {
+      user: { id: session.user?.id },
+      token_type: session.token_type,
+      access_token: session.access_token,
+      refresh_token: session.refresh_token
+    };
   }
 
   private async getUser(accessToken: string): Promise<
