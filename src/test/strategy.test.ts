@@ -1,9 +1,8 @@
 import { describe, expect, it } from 'vitest';
-
 import { SupabaseStrategy } from '../index';
-import { supabaseClient } from '../mocks/supabase';
-import { sessionStorage } from '../mocks/sessionStorage';
 import { verify } from '../mocks/authenticator';
+import { sessionStorage } from '../mocks/sessionStorage';
+import { supabaseClient } from '../mocks/supabase';
 
 describe('strategy', () => {
   it('should throw if missing supabaseClient', () => {

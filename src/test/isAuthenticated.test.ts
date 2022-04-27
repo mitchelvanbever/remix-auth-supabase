@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest';
-
 import { authenticator } from '../mocks/authenticator';
-import { authenticatedReq } from '../mocks/requests';
 import { validResponse } from '../mocks/handlers';
+import { authenticatedReq } from '../mocks/requests';
 import { user } from '../mocks/user';
 
 describe('isAuthenticated', async () => {

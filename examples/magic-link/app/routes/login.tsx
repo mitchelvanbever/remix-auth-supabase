@@ -1,8 +1,8 @@
 import type { ActionFunction, LoaderFunction } from 'remix';
 import { Form, json, redirect, useActionData, useTransition } from 'remix';
 import { authenticator, magicLinkStrategy, sessionStorage } from '~/auth.server';
-import { supabaseAdmin } from '~/supabase.server';
 import type { ApiError } from '~/supabase.server';
+import { supabaseAdmin } from '~/supabase.server';
 
 interface LoaderData {
   error: { message: string } | null;

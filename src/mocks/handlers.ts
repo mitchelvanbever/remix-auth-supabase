@@ -1,5 +1,4 @@
 import { rest } from 'msw';
-
 import { concurrentUserA, concurrentUserB, user, password as userPassword } from './user';
 
 export const validResponse = {
