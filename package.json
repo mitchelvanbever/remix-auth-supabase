@@ -31,7 +31,8 @@
     "lint:fix": "eslint . --fix",
     "test": "vitest --ui",
     "test:ci": "vitest",
-    "cov": "vitest --coverage"
+    "cov": "vitest --coverage",
+    "prepare": "husky install"
   },
   "peerDependencies": {
     "@remix-run/server-runtime": "1.4.1"
@@ -54,6 +55,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
     "formdata-polyfill": "4.0.10",
+    "husky": "^7.0.4",
     "msw": "0.39.2",
     "prettier": "^2.6.2",
     "react": "18.1.0",
@@ -124,41 +126,6 @@
       ],
       "no-lone-blocks": "error",
       "no-loop-func": "error",
-      "no-mixed-operators": [
-        "error",
-        {
-          "groups": [
-            [
-              "&",
-              "|",
-              "^",
-              "~",
-              "<<",
-              ">>",
-              ">>>"
-            ],
-            [
-              "==",
-              "!=",
-              "===",
-              "!==",
-              ">",
-              ">=",
-              "<",
-              "<="
-            ],
-            [
-              "&&",
-              "||"
-            ],
-            [
-              "in",
-              "instanceof"
-            ]
-          ],
-          "allowSamePrecedence": false
-        }
-      ],
       "no-multi-str": "error",
       "no-native-reassign": "error",
       "no-negated-in-lhs": "error",
@@ -184,6 +151,16 @@
       "no-this-before-super": "error",
       "no-throw-literal": "error",
       "no-undef": "warn",
+      "react/jsx-no-undef": 0,
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false,
+          "caughtErrors": "none"
+        }
+      ],
       "no-unreachable": "error",
       "no-unused-expressions": [
         "warn",

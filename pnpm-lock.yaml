@@ -15,6 +15,7 @@ specifiers:
   eslint-config-prettier: ^8.5.0
   eslint-plugin-prettier: ^4.0.0
   formdata-polyfill: 4.0.10
+  husky: ^7.0.4
   msw: 0.39.2
   prettier: ^2.6.2
   react: 18.1.0
@@ -41,6 +42,7 @@ devDependencies:
   eslint-config-prettier: 8.5.0_eslint@8.14.0
   eslint-plugin-prettier: 4.0.0_665eb419c9d7860ca0c224f7f6dcdace
   formdata-polyfill: 4.0.10
+  husky: 7.0.4
   msw: 0.39.2
   prettier: 2.6.2
   react: 18.1.0
@@ -2503,6 +2505,12 @@ packages:
       domhandler: 4.3.1
       domutils: 2.8.0
       entities: 3.0.1
+    dev: true
+
+  /husky/7.0.4:
+    resolution: {integrity: sha512-vbaCKN2QLtP/vD4yvs6iz6hBEo6wkSzs8HpRah1Z6aGmF2KW5PdYuAd7uX5a+OyBZHBhd+TFLqgjUgytQr4RvQ==}
+    engines: {node: '>=12'}
+    hasBin: true
     dev: true
 
   /iconv-lite/0.4.24:

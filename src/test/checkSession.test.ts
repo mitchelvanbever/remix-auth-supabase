@@ -1,13 +1,12 @@
-import { describe, expect, it } from 'vitest';
 import { matchRequestUrl } from 'msw';
-
-import { concurrentUserA, concurrentUserB, user } from '../mocks/user';
-import { sessionStorage } from '../mocks/sessionStorage';
+import { describe, expect, it } from 'vitest';
 import { supabaseStrategy } from '../mocks/authenticator';
-import { authenticatedReq } from '../mocks/requests';
 import { SESSION_KEY } from '../mocks/constants';
 import { validResponse } from '../mocks/handlers';
+import { authenticatedReq } from '../mocks/requests';
 import { server } from '../mocks/server';
+import { sessionStorage } from '../mocks/sessionStorage';
+import { concurrentUserA, concurrentUserB, user } from '../mocks/user';
 
 describe('[external export] revalidate', async () => {
   it('should redirect if cookie is not set', async () => {
@@ -134,8 +133,6 @@ describe('[external export] revalidate', async () => {
     ]);
 
     server.events.removeAllListeners();
-
-    console.log(sendRequests);
 
     expect(sendRequests.size).toEqual(2);
   });
