@@ -1,11 +1,4 @@
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from 'remix'
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from 'remix';
 
 export default function App() {
   return (
@@ -23,5 +16,5 @@ export default function App() {
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
-  )
+  );
 }

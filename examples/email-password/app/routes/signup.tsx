@@ -1,11 +1,11 @@
-import type { LoaderFunction } from 'remix'
-import { ActionFunction, Form, redirect, useActionData, useLoaderData } from 'remix'
-import { AuthorizationError } from 'remix-auth'
-import { authenticator } from '~/auth.server'
-import { supabaseClient } from '~/supabase'
+import type { LoaderFunction } from 'remix';
+import { ActionFunction, Form, redirect, useActionData, useLoaderData } from 'remix';
+import { AuthorizationError } from 'remix-auth';
+import { authenticator } from '~/auth.server';
+import { supabaseClient } from '~/supabase';
 
 interface LoaderData {
-  error: { message: string } | null
+  error: { message: string } | null;
 }
 
 // export const loader: ActionFunction = async({ request }) => {
@@ -15,20 +15,16 @@ interface LoaderData {
 //   })
 // }
 
-export const action: LoaderFunction = async({ request }) => {
-  const form = await request.formData()
-  const email = form?.get('email')
-  const password = form?.get('password')
+export const action: LoaderFunction = async ({ request }) => {
+  const form = await request.formData();
+  const email = form?.get('email');
+  const password = form?.get('password');
 
-  if (!email)
-    throw new AuthorizationError('Email is required')
-  if (typeof email !== 'string')
-    throw new AuthorizationError('Email must be a string')
+  if (!email) throw new AuthorizationError('Email is required');
+  if (typeof email !== 'string') throw new AuthorizationError('Email must be a string');
 
-  if (!password)
-    throw new AuthorizationError('Password is required')
-  if (typeof password !== 'string')
-    throw new AuthorizationError('Password must be a string')
+  if (!password) throw new AuthorizationError('Password is required');
+  if (typeof password !== 'string') throw new AuthorizationError('Password must be a string');
 
   // const isEmail = z.string().email().nonempty().safeParse(email)
   // const isPassword = z.string().min(6).max(66).safeParse(password)
@@ -53,21 +49,19 @@ export const action: LoaderFunction = async({ request }) => {
 
   const { error } = await supabaseClient.auth.signUp({
     email,
-    password,
-  })
+    password
+  });
 
-  if (error)
-    return { formError: error?.message }
+  if (error) return { formError: error?.message };
 
-  return redirect('/profile')
-}
+  return redirect('/profile');
+};
 
 export default function Screen() {
-  useActionData<LoaderData>()
+  useActionData<LoaderData>();
 
   return (
     <Form method="post">
-
       <div>
         <label htmlFor="email">Email</label>
         <input type="email" name="email" id="email" />
@@ -80,5 +74,5 @@ export default function Screen() {
 
       <button>Log In</button>
     </Form>
-  )
+  );
 }

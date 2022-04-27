@@ -1,23 +1,6 @@
 {
   "name": "remix-auth-supabase",
   "version": "3.1.0",
-  "repository": {
-    "url": "https://github.com/mitchelvanbever/remix-auth-supabase"
-  },
-  "author": {
-    "name": "mitchelvanbever",
-    "twitter": "@ghostethedev"
-  },
-  "main": "./build/index.js",
-  "types": "./build/index.d.ts",
-  "scripts": {
-    "build": "tsc --project tsconfig.build.json",
-    "typecheck": "tsc --project tsconfig.json --noEmit",
-    "lint": "eslint --ext .ts,.tsx src/",
-    "test": "vitest --ui",
-    "test:ci": "vitest",
-    "cov": "vitest --coverage"
-  },
   "keywords": [
     "remix",
     "remix-auth",
@@ -27,13 +10,34 @@
     "vitest"
   ],
   "license": "MIT",
+  "author": {
+    "name": "mitchelvanbever",
+    "twitter": "@ghostethedev"
+  },
+  "repository": {
+    "url": "https://github.com/mitchelvanbever/remix-auth-supabase"
+  },
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
   "files": [
     "build",
     "package.json",
     "README.md"
   ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest --ui",
+    "test:ci": "vitest",
+    "cov": "vitest --coverage"
+  },
   "peerDependencies": {
     "@remix-run/server-runtime": "1.4.1"
+  },
+  "dependencies": {
+    "remix-auth": "3.2.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "0.21.1",
@@ -47,18 +51,197 @@
     "c8": "7.11.2",
     "cz-conventional-changelog": "3.3.0",
     "eslint": "8.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "formdata-polyfill": "4.0.10",
     "msw": "0.39.2",
+    "prettier": "^2.6.2",
     "react": "18.1.0",
     "typescript": "4.6.3",
     "vite": "2.9.6",
     "vitest": "0.10.0"
   },
-  "dependencies": {
-    "remix-auth": "3.2.1"
-  },
   "eslintConfig": {
-    "extends": "@antfu/eslint-config"
+    "extends": [
+      "@antfu/eslint-config",
+      "prettier"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "antfu/if-newline": "off",
+      "array-element-newline": [
+        "error",
+        {
+          "ArrayExpression": "consistent",
+          "ArrayPattern": {
+            "multiline": true
+          }
+        }
+      ],
+      "indent": "error",
+      "default-case": [
+        "error",
+        {
+          "commentPattern": "^no default$"
+        }
+      ],
+      "dot-location": [
+        "error",
+        "property"
+      ],
+      "eqeqeq": [
+        "error",
+        "smart"
+      ],
+      "new-parens": "error",
+      "no-const-assign": "error",
+      "no-control-regex": "error",
+      "no-delete-var": "error",
+      "no-dupe-args": "error",
+      "no-dupe-keys": "error",
+      "no-duplicate-case": "error",
+      "no-empty-character-class": "error",
+      "no-empty-pattern": "error",
+      "no-eval": "error",
+      "no-ex-assign": "error",
+      "no-extend-native": "error",
+      "no-extra-bind": "error",
+      "no-extra-label": "error",
+      "no-fallthrough": "error",
+      "no-func-assign": "error",
+      "no-implied-eval": "error",
+      "no-invalid-regexp": "error",
+      "no-iterator": "error",
+      "no-label-var": "error",
+      "no-labels": [
+        "error",
+        {
+          "allowLoop": true,
+          "allowSwitch": false
+        }
+      ],
+      "no-lone-blocks": "error",
+      "no-loop-func": "error",
+      "no-mixed-operators": [
+        "error",
+        {
+          "groups": [
+            [
+              "&",
+              "|",
+              "^",
+              "~",
+              "<<",
+              ">>",
+              ">>>"
+            ],
+            [
+              "==",
+              "!=",
+              "===",
+              "!==",
+              ">",
+              ">=",
+              "<",
+              "<="
+            ],
+            [
+              "&&",
+              "||"
+            ],
+            [
+              "in",
+              "instanceof"
+            ]
+          ],
+          "allowSamePrecedence": false
+        }
+      ],
+      "no-multi-str": "error",
+      "no-native-reassign": "error",
+      "no-negated-in-lhs": "error",
+      "no-new-func": "error",
+      "no-new-object": "error",
+      "no-new-symbol": "error",
+      "no-new-wrappers": "error",
+      "no-obj-calls": "error",
+      "no-octal": "error",
+      "no-octal-escape": "error",
+      "no-regex-spaces": "error",
+      "no-restricted-syntax": [
+        "error",
+        "WithStatement"
+      ],
+      "no-script-url": "error",
+      "no-self-assign": "error",
+      "no-self-compare": "error",
+      "no-sequences": "error",
+      "no-shadow-restricted-names": "error",
+      "no-sparse-arrays": "error",
+      "no-template-curly-in-string": "error",
+      "no-this-before-super": "error",
+      "no-throw-literal": "error",
+      "no-undef": "warn",
+      "no-unreachable": "error",
+      "no-unused-expressions": [
+        "warn",
+        {
+          "allowShortCircuit": true,
+          "allowTernary": true,
+          "allowTaggedTemplates": true
+        }
+      ],
+      "no-unused-labels": "error",
+      "no-unused-vars": [
+        "warn",
+        {
+          "args": "none",
+          "ignoreRestSiblings": true
+        }
+      ],
+      "no-useless-computed-key": "error",
+      "no-useless-concat": "error",
+      "no-useless-constructor": "error",
+      "no-useless-escape": "error",
+      "no-useless-rename": [
+        "error",
+        {
+          "ignoreDestructuring": false,
+          "ignoreImport": false,
+          "ignoreExport": false
+        }
+      ],
+      "no-with": "error",
+      "no-whitespace-before-property": "error",
+      "require-yield": "error",
+      "rest-spread-spacing": [
+        "error",
+        "never"
+      ],
+      "strict": [
+        "error",
+        "never"
+      ],
+      "unicode-bom": [
+        "error",
+        "never"
+      ],
+      "use-isnan": "error",
+      "valid-typeof": "error",
+      "prettier/prettier": [
+        "error",
+        {
+          "printWidth": 120,
+          "semi": true,
+          "singleQuote": true,
+          "tabWidth": 2,
+          "trailingComma": "none",
+          "useTabs": false
+        }
+      ]
+    }
   },
   "config": {
     "commitizen": {
