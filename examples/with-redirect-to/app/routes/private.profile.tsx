@@ -1,23 +1,25 @@
-import type { ActionFunction, LoaderFunction } from 'remix'
-import { Form, json, useLoaderData } from 'remix'
-import { authenticator, supabaseStrategy } from '~/auth.server'
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { Form, json, useLoaderData } from 'remix';
+import { authenticator, supabaseStrategy } from '~/auth.server';
 
-type LoaderData = { email?: string }
-
-export const action: ActionFunction = async({ request }) => {
-  await authenticator.logout(request, { redirectTo: '/login' })
+interface LoaderData {
+  email?: string;
 }
 
-export const loader: LoaderFunction = async({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
+  await authenticator.logout(request, { redirectTo: '/login' });
+};
+
+export const loader: LoaderFunction = async ({ request }) => {
   const session = await supabaseStrategy.checkSession(request, {
-    failureRedirect: '/login?redirectTo=/private/profile',
-  })
+    failureRedirect: '/login?redirectTo=/private/profile'
+  });
 
-  return json<LoaderData>({ email: session.user?.email })
-}
+  return json<LoaderData>({ email: session.user?.email });
+};
 
 export default function Screen() {
-  const { email } = useLoaderData<LoaderData>()
+  const { email } = useLoaderData<LoaderData>();
   return (
     <>
       <h1>Hello {email}</h1>
@@ -27,5 +29,5 @@ export default function Screen() {
         <button>Log Out</button>
       </Form>
     </>
-  )
+  );
 }

@@ -1,4 +1,4 @@
-name: '🐛 Bug report'
+name: 🐛 Bug report
 description: Create a report to help us improve
 body:
   - type: markdown
@@ -9,7 +9,7 @@ body:
         This issue tracker is for reporting bugs found in `remix-auth-supabase` (https://github.com/mitchelvanbever/remix-auth-supabase).
         If you have a question about how to achieve something and are struggling, please post a question
         inside of `remix-auth-supabase` Discussions tab: https://github.com/mitchelvanbever/remix-auth-supabase/discussions
-        
+
         Before submitting a new bug/issue, please check the links below to see if there is a solution or question posted there already:
          - `remix-auth-supabase` Issues tab: https://github.com/mitchelvanbever/remix-auth-supabase/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
          - `remix-auth-supabase` closed issues tab: https://github.com/mitchelvanbever/remix-auth-supabase/issues?q=is%3Aissue+sort%3Aupdated-desc+is%3Aclosed

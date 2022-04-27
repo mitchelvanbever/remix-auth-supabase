@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from '@remix-run/server-runtime'
+import { createCookieSessionStorage } from '@remix-run/node';
 
 // You will probably need a sessionStorage to test the strategy.
 export const sessionStorage = createCookieSessionStorage({
@@ -9,6 +9,6 @@ export const sessionStorage = createCookieSessionStorage({
     sameSite: 'lax',
     name: 'sb',
     secrets: ['s3cr3t'],
-    maxAge: 60 * 60, // 1 hour
-  },
-})
+    maxAge: 60 * 60 // 1 hour
+  }
+});

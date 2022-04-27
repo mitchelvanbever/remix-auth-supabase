@@ -1,36 +1,32 @@
-import type { ActionFunction, LoaderFunction } from 'remix'
-import { Form, json, useLoaderData } from 'remix'
-import { authenticator, sessionStorage, supabaseStrategy } from '~/auth.server'
+import type { ActionFunction, LoaderFunction } from 'remix';
+import { Form, json, useLoaderData } from 'remix';
+import { authenticator, sessionStorage, supabaseStrategy } from '~/auth.server';
 
-type LoaderData = {
-  error: { message: string } | null
+interface LoaderData {
+  error: { message: string } | null;
 }
 
-export const action: ActionFunction = async({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
   await authenticator.authenticate('sb', request, {
     successRedirect: '/private',
-    failureRedirect: '/login',
-  })
-}
+    failureRedirect: '/login'
+  });
+};
 
-export const loader: LoaderFunction = async({ request }) => {
+export const loader: LoaderFunction = async ({ request }) => {
   await supabaseStrategy.checkSession(request, {
-    successRedirect: '/private',
-  })
+    successRedirect: '/private'
+  });
 
-  const session = await sessionStorage.getSession(
-    request.headers.get('Cookie'),
-  )
+  const session = await sessionStorage.getSession(request.headers.get('Cookie'));
 
-  const error = session.get(
-    authenticator.sessionErrorKey,
-  ) as LoaderData['error']
+  const error = session.get(authenticator.sessionErrorKey) as LoaderData['error'];
 
-  return json<LoaderData>({ error })
-}
+  return json<LoaderData>({ error });
+};
 
 export default function Screen() {
-  const { error } = useLoaderData<LoaderData>()
+  const { error } = useLoaderData<LoaderData>();
 
   return (
     <Form method="post">
@@ -47,5 +43,5 @@ export default function Screen() {
 
       <button>Log In</button>
     </Form>
-  )
+  );
 }

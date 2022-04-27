@@ -1,5 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Session } from "@supabase/supabase-js";
+import type { Session } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
 declare global {
   namespace NodeJS {
@@ -10,13 +10,9 @@ declare global {
   }
 }
 
-if (!process.env.SUPABASE_URL) {
-  throw new Error("SUPABASE_URL is required");
-}
+if (!process.env.SUPABASE_URL) throw new Error('SUPABASE_URL is required');
 
-if (!process.env.SUPABASE_SERVICE_KEY) {
-  throw new Error("SUPABASE_SERVICE_KEY is required");
-}
+if (!process.env.SUPABASE_SERVICE_KEY) throw new Error('SUPABASE_SERVICE_KEY is required');
 
 // Supabase options example (build your own :))
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
