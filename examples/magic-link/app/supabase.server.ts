@@ -1,26 +1,22 @@
-import { createClient } from '@supabase/supabase-js'
-import type { ApiError, Session } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
+import type { ApiError, Session } from '@supabase/supabase-js';
 
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      SUPABASE_URL: string
-      SUPABASE_SERVICE_KEY: string
-      PUBLIC_SUPABASE_ANON_KEY: string
-      SERVER_URL: string
+      SUPABASE_URL: string;
+      SUPABASE_SERVICE_KEY: string;
+      PUBLIC_SUPABASE_ANON_KEY: string;
+      SERVER_URL: string;
     }
   }
-
 }
 
-if (!process.env.SUPABASE_URL)
-  throw new Error('ENV: SUPABASE_URL is required')
+if (!process.env.SUPABASE_URL) throw new Error('ENV: SUPABASE_URL is required');
 
-if (!process.env.SUPABASE_SERVICE_KEY)
-  throw new Error('ENV: SUPABASE_SERVICE_KEY is required')
+if (!process.env.SUPABASE_SERVICE_KEY) throw new Error('ENV: SUPABASE_SERVICE_KEY is required');
 
-if (!process.env.SERVER_URL)
-  throw new Error('ENV: SERVER_URL is required')
+if (!process.env.SERVER_URL) throw new Error('ENV: SERVER_URL is required');
 
 // Supabase options example (build your own :))
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
@@ -36,9 +32,6 @@ if (!process.env.SERVER_URL)
 
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
-export const supabaseAdmin = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY,
-)
+export const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
 
-export { Session, ApiError }
+export { Session, ApiError };

@@ -1,10 +1,10 @@
-import { afterAll, afterEach, beforeAll } from 'vitest'
-import { installGlobals } from '@remix-run/node'
+import { afterAll, afterEach, beforeAll } from 'vitest';
+import { installGlobals } from '@remix-run/node';
 
-import { server } from '../mocks/server'
+import { server } from '../mocks/server';
 
-installGlobals()
+installGlobals();
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }))
-afterAll(() => server.close())
-afterEach(() => server.resetHandlers())
+beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+afterAll(() => server.close());
+afterEach(() => server.resetHandlers());

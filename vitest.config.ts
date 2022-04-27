@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 /// <reference types="vite/client" />
 
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   test: {
@@ -10,7 +10,7 @@ export default defineConfig({
     coverage: {
       cleanOnReRun: true,
       reporter: ['text', 'html'],
-      inlcude: ['./src/index.ts', './src/handlePromise.ts'],
-    },
-  },
-})
+      inlcude: ['./src/index.ts', './src/handlePromise.ts']
+    }
+  }
+});

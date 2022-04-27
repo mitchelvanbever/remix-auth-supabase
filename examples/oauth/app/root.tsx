@@ -1,25 +1,17 @@
-import type { LoaderFunction } from 'remix'
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  useLoaderData,
-} from 'remix'
+import type { LoaderFunction } from 'remix';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from 'remix';
 
 export const loader: LoaderFunction = () => {
   return {
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL,
-      PUBLIC_SUPABASE_ANON_KEY: process.env.PUBLIC_SUPABASE_ANON_KEY,
-    },
-  }
-}
+      PUBLIC_SUPABASE_ANON_KEY: process.env.PUBLIC_SUPABASE_ANON_KEY
+    }
+  };
+};
 
 export default function App() {
-  const { env } = useLoaderData<Window>()
+  const { env } = useLoaderData<Window>();
 
   return (
     <html lang="en">
@@ -34,14 +26,12 @@ export default function App() {
         <ScrollRestoration />
         <script
           dangerouslySetInnerHTML={{
-            __html: `window.env = ${JSON.stringify(
-              env,
-            )}`,
+            __html: `window.env = ${JSON.stringify(env)}`
           }}
         />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
-  )
+  );
 }
