@@ -1,5 +1,5 @@
-import type { ActionFunction } from 'remix';
-import { Link } from 'remix';
+import type { ActionFunction } from '@remix-run/node';
+import { Link } from '@remix-run/react';
 import { authenticator } from '~/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
