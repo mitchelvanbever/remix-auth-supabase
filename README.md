@@ -47,9 +47,9 @@ but it now sends the entire request. See [Setup authenticator & strategy](#setup
 ### Setup sessionStorage, strategy & authenticator
 ```js
 // app/auth.server.ts
-import { createCookieSessionStorage } from 'remix';
+import { createCookieSessionStorage } from '@remix-run/node';
 import { Authenticator, AuthorizationError } from 'remix-auth';
-import { SupabaseStrategy } from '@afaik/remix-auth-supabase-strategy';
+import { SupabaseStrategy } from 'remix-auth-supabase-strategy';
 import { Session, supabaseClient } from '~/supabase';
 
 export const sessionStorage = createCookieSessionStorage({
