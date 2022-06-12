@@ -530,6 +530,21 @@
     node-fetch "^2.6.1"
     source-map-support "^0.5.21"
 
+"@remix-run/node@^1.4.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/node/-/node-1.5.1.tgz#1c367d4035baaef8f0ea66962a826456d62f0030"
+  integrity sha512-yl4bd1nl7MiJp4tI3+4ygObeMU3txM4Uo09IdHLRa4NMdBQnacUJ47kqCahny01MerC2JL2d9NPjdVPwRCRZvQ==
+  dependencies:
+    "@remix-run/server-runtime" "1.5.1"
+    "@remix-run/web-fetch" "^4.1.3"
+    "@remix-run/web-file" "^3.0.2"
+    "@remix-run/web-stream" "^1.0.3"
+    "@web3-storage/multipart-parser" "^1.0.0"
+    abort-controller "^3.0.0"
+    cookie-signature "^1.1.0"
+    source-map-support "^0.5.21"
+    stream-slice "^0.1.2"
+
 "@remix-run/react@^1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@remix-run/react/-/react-1.4.1.tgz#1875ebeffabedb66a2634b237e247919fdadccf4"
@@ -559,6 +574,60 @@
     react-router-dom "^6.2.2"
     set-cookie-parser "^2.4.8"
     source-map "^0.7.3"
+
+"@remix-run/server-runtime@1.5.1":
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/@remix-run/server-runtime/-/server-runtime-1.5.1.tgz#5272b01e6dce109dc10bd68447ceae2d039315b2"
+  integrity sha512-FQbCCdW+qzE3wpoCwUKdwcL8yZVYNPiyHS9JS/6r6qmd/yvZfbj44E48wEQ6trbWE2TUiEh/EQqNMyrZWEs4bw==
+  dependencies:
+    "@types/cookie" "^0.4.0"
+    "@web3-storage/multipart-parser" "^1.0.0"
+    cookie "^0.4.1"
+    jsesc "^3.0.1"
+    react-router-dom "^6.2.2"
+    set-cookie-parser "^2.4.8"
+    source-map "^0.7.3"
+
+"@remix-run/web-blob@^3.0.3", "@remix-run/web-blob@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@remix-run/web-blob/-/web-blob-3.0.4.tgz#99c67b9d0fb641bd0c07d267fd218ae5aa4ae5ed"
+  integrity sha512-AfegzZvSSDc+LwnXV+SwROTrDtoLiPxeFW+jxgvtDAnkuCX1rrzmVJ6CzqZ1Ai0bVfmJadkG5GxtAfYclpPmgw==
+  dependencies:
+    "@remix-run/web-stream" "^1.0.0"
+    web-encoding "1.1.5"
+
+"@remix-run/web-fetch@^4.1.3":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@remix-run/web-fetch/-/web-fetch-4.1.3.tgz#8ad3077c1b5bd9fe2a8813d0ad3c84970a495c04"
+  integrity sha512-D3KXAEkzhR248mu7wCHReQrMrIo3Y9pDDa7TrlISnsOEvqkfWkJJF+PQWmOIKpOSHAhDg7TCb2tzvW8lc/MfHw==
+  dependencies:
+    "@remix-run/web-blob" "^3.0.4"
+    "@remix-run/web-form-data" "^3.0.2"
+    "@remix-run/web-stream" "^1.0.3"
+    "@web3-storage/multipart-parser" "^1.0.0"
+    data-uri-to-buffer "^3.0.1"
+    mrmime "^1.0.0"
+
+"@remix-run/web-file@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@remix-run/web-file/-/web-file-3.0.2.tgz#1a6cc0900a1310ede4bc96abad77ac6eb27a2131"
+  integrity sha512-eFC93Onh/rZ5kUNpCQersmBtxedGpaXK2/gsUl49BYSGK/DvuPu3l06vmquEDdcPaEuXcsdGP0L7zrmUqrqo4A==
+  dependencies:
+    "@remix-run/web-blob" "^3.0.3"
+
+"@remix-run/web-form-data@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@remix-run/web-form-data/-/web-form-data-3.0.2.tgz#733a4c8f8176523b7b60a8bd0dc6704fd4d498f3"
+  integrity sha512-F8tm3iB1sPxMpysK6Js7lV3gvLfTNKGmIW38t/e6dtPEB5L1WdbRG1cmLyhsonFc7rT1x1JKdz+2jCtoSdnIUw==
+  dependencies:
+    web-encoding "1.1.5"
+
+"@remix-run/web-stream@^1.0.0", "@remix-run/web-stream@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@remix-run/web-stream/-/web-stream-1.0.3.tgz#3284a6a45675d1455c4d9c8f31b89225c9006438"
+  integrity sha512-wlezlJaA5NF6SsNMiwQnnAW6tnPzQ5I8qk0Y0pSohm0eHKa2FQ1QhEKLVVcDDu02TmkfHgnux0igNfeYhDOXiA==
+  dependencies:
+    web-streams-polyfill "^3.1.1"
 
 "@rollup/pluginutils@^4.0.0":
   version "4.2.1"
@@ -831,6 +900,11 @@
   integrity sha512-jyIbdVl+0ZJyKGTV0Ohb9E6UnxP+t7ZzX4Do3AHjZKxUXKMs9EmqnBDQgHF7bEw0EzbQygOjtt/7gvtmi//iCQ==
   dependencies:
     web-streams-polyfill "^3.1.1"
+
+"@web3-storage/multipart-parser@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@web3-storage/multipart-parser/-/multipart-parser-1.0.0.tgz#6b69dc2a32a5b207ba43e556c25cc136a56659c4"
+  integrity sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==
 
 "@zxing/text-encoding@0.9.0":
   version "0.9.0"
@@ -1526,6 +1600,11 @@ d@1, d@^1.0.1:
   dependencies:
     es5-ext "^0.10.50"
     type "^1.0.1"
+
+data-uri-to-buffer@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-3.0.1.tgz#594b8973938c5bc2c33046535785341abc4f3636"
+  integrity sha512-WboRycPNsVw3B3TL559F7kuBUM4d8CgMEvk6xEJlOp7OBPjt6G7z8WMWlD2rOFZLk6OYfFIUGsCOWzcQH9K2og==
 
 deasync@^0.1.0:
   version "0.1.26"
@@ -3860,6 +3939,11 @@ mri@^1.1.0:
   resolved "https://registry.yarnpkg.com/mri/-/mri-1.2.0.tgz#6721480fec2a11a4889861115a48b6cbe7cc8f0b"
   integrity sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==
 
+mrmime@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/mrmime/-/mrmime-1.0.1.tgz#5f90c825fad4bdd41dc914eff5d1a8cfdaf24f27"
+  integrity sha512-hzzEagAgDyoU1Q6yg5uI+AorQgdvMCur3FcKf7NhMKWsaYg+RnbTyHRa/9IlLF9rf455MOCtcqqrQQ83pPP7Uw==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
@@ -4497,11 +4581,6 @@ remix-utils@^2.2.0:
     type-fest "^2.5.2"
     uuid "^8.3.2"
 
-remix@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/remix/-/remix-1.4.1.tgz#f9f4b4341754b86ed73733621974b50f5a2a3f73"
-  integrity sha512-lv8wqwGVYtFvplc5B9pQH0C17cO/MFrDFNbvaMQ3rDeguu+YYlQvVsDVw2NzXB8ZA6Ad7JxYRT341ADI+LuBCQ==
-
 repeat-element@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/repeat-element/-/repeat-element-1.1.4.tgz#be681520847ab58c7568ac75fbfad28ed42d39e9"
@@ -4910,6 +4989,11 @@ stream-shift@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
+
+stream-slice@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/stream-slice/-/stream-slice-0.1.2.tgz#2dc4f4e1b936fb13f3eb39a2def1932798d07a4b"
+  integrity sha512-QzQxpoacatkreL6jsxnVb7X5R/pGw9OUv2qWTYWnmLpg4NdN31snPy/f3TdQE1ZUXaThRvj1Zw4/OGg0ZkaLMA==
 
 streamsearch@0.1.2:
   version "0.1.2"
