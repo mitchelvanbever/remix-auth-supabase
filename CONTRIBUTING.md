@@ -1,5 +1,7 @@
 # Contribution
 
+PRs welcome!
+
 ## Setup
 
 Run `npm install` to install the dependencies.

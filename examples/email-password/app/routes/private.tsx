@@ -1,5 +1,6 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { Form, json, useLoaderData } from 'remix';
+import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { Form, useLoaderData } from '@remix-run/react';
 import { authenticator, supabaseStrategy } from '~/auth.server';
 
 interface LoaderData {
@@ -22,7 +23,7 @@ export default function Screen() {
   const { email } = useLoaderData<LoaderData>();
   return (
     <>
-      <h1>Hello {email}</h1>
+      <h1>Hello {email ?? 'anon'}</h1>
 
       <Form method="post">
         <button>Log Out</button>

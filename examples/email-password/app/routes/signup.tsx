@@ -1,5 +1,6 @@
-import type { LoaderFunction } from 'remix';
-import { Form, redirect, useActionData } from 'remix';
+import type { LoaderFunction } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { Form, useActionData } from '@remix-run/react';
 import { AuthorizationError } from 'remix-auth';
 import { supabaseClient } from '~/supabase';
 

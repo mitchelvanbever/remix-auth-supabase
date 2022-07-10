@@ -4,15 +4,17 @@ import { validResponse } from '../mocks/handlers';
 import { authenticatedReq } from '../mocks/requests';
 import { user } from '../mocks/user';
 
+const mockUrl = new URL('/test/is-authenticated', 'http://localhost');
+
 describe('isAuthenticated', async () => {
   it('should return null', async () => {
-    const isAuthenticated = await authenticator.isAuthenticated(new Request(''));
+    const isAuthenticated = await authenticator.isAuthenticated(new Request(mockUrl));
     expect(isAuthenticated).toBe(null);
   });
   it('should redirect when failureRedirect is defined', async () => {
     expect.assertions(1);
     await authenticator
-      .isAuthenticated(new Request(''), { failureRedirect: '/error' })
+      .isAuthenticated(new Request(mockUrl), { failureRedirect: '/error' })
       .catch((res: Response) => expect(res.status).toBe(302));
   });
   it('should redirect when successRedirect is defined', async () => {

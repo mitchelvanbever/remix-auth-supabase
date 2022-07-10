@@ -1,4 +1,3 @@
-/* eslint-disable brace-style */
 import type { SessionStorage } from '@remix-run/server-runtime';
 import type { ApiError, Session, SupabaseClient, User } from '@supabase/supabase-js';
 import type { AuthenticateOptions, StrategyVerifyCallback } from 'remix-auth';

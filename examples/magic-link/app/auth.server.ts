@@ -1,4 +1,4 @@
-import { createCookieSessionStorage } from 'remix';
+import { createCookieSessionStorage } from '@remix-remix/node';
 import { Authenticator, AuthorizationError } from 'remix-auth';
 import { SupabaseStrategy } from 'remix-auth-supabase';
 import type { Session } from '~/supabase.server';
