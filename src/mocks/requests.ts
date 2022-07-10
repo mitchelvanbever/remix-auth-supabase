@@ -1,3 +1,4 @@
+import type { HeadersInit } from '@remix-run/node';
 import type { CookieInit } from '../test/utils';
 import { getResWithSession } from '../test/utils';
 
