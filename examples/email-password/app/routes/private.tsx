@@ -23,7 +23,7 @@ export default function Screen() {
   const { email } = useLoaderData<LoaderData>();
   return (
     <>
-      <h1>Hello {email}</h1>
+      <h1>Hello {email ?? 'anon'}</h1>
 
       <Form method="post">
         <button>Log Out</button>
