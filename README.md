@@ -2,18 +2,28 @@
 
 > Strategy for using supabase with Remix Auth
 
-This strategy aims to provide an easy way to start using supabase authentication on [Remix.run](https://remix.run/) with [remix-auth](https://github.com/sergiodxa/remix-auth) bootstrapped with [remix-auth-template](https://github.com/sergiodxa/remix-auth-strategy-template)) (thanks [@sergiodxa](https://github.com/sergiodxa) 🚀).
+This strategy aims to provide an easy way to start using *supabase* for authentication in [Remix.run](https://remix.run/) apps! It uses [remix-auth](https://github.com/sergiodxa/remix-auth) as its base bootstrapped from [remix-auth-template](https://github.com/sergiodxa/remix-auth-strategy-template)) (thanks [@sergiodxa](https://github.com/sergiodxa) 🚀).
+
+## 📖 Examples
+- [Email / password]("https://github.com/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/email-password")
+- [With redirect to]("https://github.com/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/with-redirect-to")
+- [OAuth provider(s)]("https://github.com/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/oauth")
+- [Magic link]("https://github.com/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/magic-link")
 
 
 ### NOTICE 🚧
-> * This library is maintained by people who **do not** make a living creating and maintining open source libraries, it's just a hobby and life takes priority over hobbies.
-> * *Remix-auth-strategy-template* was not designed with the intention to handle everything that we currently handle (refreshing tokens for example). This unfortunately can lead to scenarios where some of the features may not work as expected or can lead to unexpected behavior (beware).
+> This library is maintained by people who **do not** make a living creating and maintining open source libraries, it's just a hobby and life takes priority over hobbies.
 >
-> Due to amount of "issues" we've already tackled in regards to the extensive feature set we provide, we're unable to guarantee the stability of this library for production usage.
-> Having all of this said, we're happy to keep this library alive for anyone who wants to (keep) using it.
+> Having that said:
+> *Remix-auth-strategy* was not designed with the intention to handle everything that we currently handle (refreshing tokens for example). This unfortunately could lead to scenarios where some of the features may not work as expected (beware).
+>
+> Having all of this said, we're happy to keep this library alive for
+anyone who wants to (keep) using it.
+>
+> 💜
 
 
-Our *official* recommendation is to use [this stack by RPHLMR](https://github.com/rphlmr/supa-fly-stack) for production grade remix applications that work with supabase.
+Our *official* recommendation for production grade remix applications with supabase is to use [the supa fly stack by RPHLMR](https://github.com/rphlmr/supa-fly-stack) 😎
 
 
 ## Supported runtimes
@@ -26,12 +36,11 @@ Our *official* recommendation is to use [this stack by RPHLMR](https://github.co
 * Cloudflare works but it does require to supply fetch to the supabase-client as an option
 
 ## Introduction
-The way remix-auth (and it's templates) are designed was not a direct fit for what I had in mind for a seamless authentication strategy with supabase. After some back and forth between and playing around with [vitest](https://vitest.dev/) as my test suite ⚡ I've settled on the following auth-flow.
+The way remix-auth (and it's templates) are designed are not a direct fit for what I had in mind for a seamless authentication strategy with Supabase. After some back and forth between the community and playing around with various setups in [vitest](https://vitest.dev/) ⚡ we decided to create a strategy that supports the following:
 
-It Supports the following:
 * Multiple authentication strategies thanks to remix-auth and the verify method (more on this later)
 * User object, access_tokens and refresh_tokens are stored in a cookie
-* `checkSession` method to protect routes (like `authenticator.isAuthenticated`) and **handle refreshing of tokens** (if expired)
+* `checkSession` method to protect routes (like `authenticator.isAuthenticated`) and **handle refreshing of expired tokens**
 
 ## How to use
 
@@ -250,8 +259,4 @@ export default function LoginPage() {
   );
 }
 ```
-
-## 📖 Examples
-- [Email / password]("https://github.com/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/email-password")
-- [With redirect to]("https://github.com/mitchelvanbever/remix-auth-supabase-strategy/tree/main/examples/with-redirect-to")
 
