@@ -3,6 +3,8 @@ import { authenticator } from '../mocks/authenticator';
 import { validResponse } from '../mocks/handlers';
 import { password, user } from '../mocks/user';
 
+const mockUrl = new URL('/test/authenticate', 'http://localhost');
+
 describe('authenticate', async () => {
   it('should handle faulty requests', async () => {
     const fData = new FormData();
@@ -12,7 +14,7 @@ describe('authenticate', async () => {
     await authenticator
       .authenticate(
         'sb',
-        new Request('', {
+        new Request(mockUrl, {
           method: 'POST',
           body: fData
         })
@@ -29,7 +31,7 @@ describe('authenticate', async () => {
     await authenticator
       .authenticate(
         'sb',
-        new Request('', {
+        new Request(mockUrl, {
           method: 'POST',
           body: fData
         })
@@ -46,7 +48,7 @@ describe('authenticate', async () => {
     await authenticator
       .authenticate(
         'sb',
-        new Request('', {
+        new Request(mockUrl, {
           method: 'POST',
           body: fData
         })

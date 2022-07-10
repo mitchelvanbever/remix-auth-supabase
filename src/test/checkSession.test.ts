@@ -8,11 +8,13 @@ import { server } from '../mocks/server';
 import { sessionStorage } from '../mocks/sessionStorage';
 import { concurrentUserA, concurrentUserB, user } from '../mocks/user';
 
+const mockUrl = new URL('/test/checksession', 'http://localhost');
+
 describe('[external export] revalidate', async () => {
   it('should redirect if cookie is not set', async () => {
     expect.assertions(2);
     await supabaseStrategy
-      .checkSession(new Request(''), {
+      .checkSession(new Request(mockUrl), {
         failureRedirect: '/login'
       })
       .catch((res) => {
@@ -22,7 +24,7 @@ describe('[external export] revalidate', async () => {
   });
   it('should return null if no cookie is set', async () => {
     expect.assertions(1);
-    await supabaseStrategy.checkSession(new Request('')).then((res) => expect(res).toBe(null));
+    await supabaseStrategy.checkSession(new Request(mockUrl)).then((res) => expect(res).toBe(null));
   });
   it('should redirect if cookie is set', async () => {
     expect.assertions(2);
