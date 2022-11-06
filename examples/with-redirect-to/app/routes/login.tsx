@@ -1,13 +1,9 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData, useSearchParams } from '@remix-run/react';
 import { authenticator, sessionStorage, supabaseStrategy } from '~/auth.server';
 
-interface LoaderData {
-  error: { message: string } | null;
-}
-
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const data = await request.clone().formData();
   const redirectTo = (data.get('redirectTo') ?? '/private') as string;
 
@@ -17,7 +13,7 @@ export const action: ActionFunction = async ({ request }) => {
   });
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   const redirectTo = new URL(request.url).searchParams.get('redirectTo') ?? '/private';
 
   await supabaseStrategy.checkSession(request, {
@@ -26,14 +22,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const session = await sessionStorage.getSession(request.headers.get('Cookie'));
 
-  const error = session.get(authenticator.sessionErrorKey) as LoaderData['error'];
+  const error = session.get(authenticator.sessionErrorKey);
 
-  return json<LoaderData>({ error });
+  return json({ error });
 };
 
 export default function Screen() {
   const [searchParams] = useSearchParams();
-  const { error } = useLoaderData<LoaderData>();
+  const { error } = useLoaderData<typeof loader>();
 
   return (
     <Form method="post">

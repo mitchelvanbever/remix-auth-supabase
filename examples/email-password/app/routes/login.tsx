@@ -1,37 +1,34 @@
-import type { ActionFunction, LoaderFunction } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
+import type { ApiError } from '@supabase/supabase-js';
 import { authenticator, sessionStorage, supabaseStrategy } from '~/auth.server';
 
-interface LoaderData {
-  error: { message: string } | null;
-}
-
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   await authenticator.authenticate('sb', request, {
     successRedirect: '/private',
     failureRedirect: '/login'
   });
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await supabaseStrategy.checkSession(request, {
     successRedirect: '/private'
   });
 
   const session = await sessionStorage.getSession(request.headers.get('Cookie'));
 
-  const error = session.get(authenticator.sessionErrorKey) as LoaderData['error'];
+  const error = session.get(authenticator.sessionErrorKey) as ApiError;
 
-  return json<LoaderData>({ error });
+  return json({ error });
 };
 
 export default function Screen() {
-  const { error } = useLoaderData<LoaderData>();
+  const data = useLoaderData<typeof loader>();
 
   return (
     <Form method="post">
-      {error && <div>{error.message}</div>}
+      {data?.error && <div>{data.error.message}</div>}
       <div>
         <label htmlFor="email">Email</label>
         <input type="email" name="email" id="email" />
