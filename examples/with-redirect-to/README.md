@@ -18,7 +18,7 @@ cp .env.example .env
 2. Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
 3. Add your `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE` in `.env`
 ```env
-SUPABASE_SERVICE_KEY="{SERVICE_KEY}"
+SUPABASE_SERVICE_ROLE="{SERVICE_KEY}"
 SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
 ```
 
@@ -36,7 +36,7 @@ This is using Remix Auth, `remix-auth-supabase` and `supabase-js` packages.
 > Thanks to Remix, we can securely use server only authentication with `supabase.auth.api.signInWithEmail`
 >
 > This function should only be called on a server (`loader` or `action` functions).
-> 
+>
 > **⚠️ Never expose your `service_role` key in the browser**
 
 
@@ -46,7 +46,7 @@ The `/private` routes redirects the user to `/login` if it's not logged-in, or s
 
 The `/private/profile` routes redirects the user to `/login?redirectTo=/private/profile` if it's not logged-in, or shows the user email and a logout form if it's logged-in.
 
-If the user go to `/private/profile` and is not logged-in, it'll be redirected here after login success. 
+If the user go to `/private/profile` and is not logged-in, it'll be redirected here after login success.
 
 **Handle refreshing of tokens** (if expired) or redirects to `/login` if it fails
 

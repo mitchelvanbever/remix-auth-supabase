@@ -1,30 +1,22 @@
-import type { ActionFunction, LoaderFunction } from 'remix';
-import { Form, json, redirect, useActionData, useTransition } from 'remix';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { Form, useActionData, useTransition } from '@remix-run/react';
+import { json, redirect } from '@remix-run/node';
 import { authenticator, magicLinkStrategy, sessionStorage } from '~/auth.server';
-import type { ApiError } from '~/supabase.server';
 import { supabaseAdmin } from '~/supabase.server';
 
-interface LoaderData {
-  error: { message: string } | null;
-}
-
-interface ActionData {
-  error: ApiError | null;
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await magicLinkStrategy.checkSession(request, {
     successRedirect: '/private'
   });
 
   const session = await sessionStorage.getSession(request.headers.get('Cookie'));
 
-  const error = session.get(authenticator.sessionErrorKey) as LoaderData['error'];
+  const error = session.get(authenticator.sessionErrorKey);
 
-  return json<LoaderData>({ error });
+  return json({ error });
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const form = await request.clone().formData();
   const email = form?.get('email');
 
@@ -37,16 +29,16 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (error) return json({ error: { message: error.message } }, error.status);
 
-  return redirect('/login/check-your-emails');
+  throw redirect('/login/check-your-emails');
 };
 
 export default function Screen() {
   const transition = useTransition();
-  const { error } = useActionData<ActionData>() || {};
+  const actionData = useActionData<typeof action>();
 
   return (
     <Form method="post">
-      {error && <div>{error.message}</div>}
+      {actionData?.error && <div>{actionData?.error.message}</div>}
       <div>
         <label htmlFor="email">Email</label>
         <input type="email" name="email" id="email" />

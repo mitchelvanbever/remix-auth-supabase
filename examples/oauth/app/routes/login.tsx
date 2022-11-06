@@ -1,26 +1,23 @@
-import type { LoaderFunction } from 'remix';
-import { json, useLoaderData } from 'remix';
+import type { LoaderArgs } from '@remix-run/node';
+import { json } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { authenticator, oAuthStrategy, sessionStorage } from '~/auth.server';
 import { signInWithGithub } from '~/supabase.client';
 
-interface LoaderData {
-  error: { message: string } | null;
-}
-
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   await oAuthStrategy.checkSession(request, {
     successRedirect: '/private'
   });
 
   const session = await sessionStorage.getSession(request.headers.get('Cookie'));
 
-  const error = session.get(authenticator.sessionErrorKey) as LoaderData['error'];
+  const error = session.get(authenticator.sessionErrorKey);
 
-  return json<LoaderData>({ error });
+  return json({ error });
 };
 
 export default function Screen() {
-  const { error } = useLoaderData<LoaderData>();
+  const { error } = useLoaderData<typeof loader>();
 
   return (
     <>

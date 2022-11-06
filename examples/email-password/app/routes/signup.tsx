@@ -1,20 +1,17 @@
-import type { LoaderFunction } from 'remix';
-import { Form, redirect, useActionData } from 'remix';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
+import { Form, useActionData } from '@remix-run/react';
 import { AuthorizationError } from 'remix-auth';
 import { supabaseClient } from '~/supabase';
 
-interface LoaderData {
-  error: { message: string } | null;
-}
-
-// export const loader: ActionFunction = async({ request }) => {
+// export const loader = async({ request }: LoaderArgs) => {
 //   await authenticator.authenticate('sb', request, {
 //     successRedirect: '/private',
 //     throwOnError: false,
 //   })
 // }
 
-export const action: LoaderFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const form = await request.formData();
   const email = form?.get('email');
   const password = form?.get('password');
@@ -57,7 +54,7 @@ export const action: LoaderFunction = async ({ request }) => {
 };
 
 export default function Screen() {
-  useActionData<LoaderData>();
+  useActionData<typeof action>();
 
   return (
     <Form method="post">

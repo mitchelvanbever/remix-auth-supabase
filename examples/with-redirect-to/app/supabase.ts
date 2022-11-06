@@ -5,14 +5,14 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SUPABASE_URL: string;
-      SUPABASE_SERVICE_KEY: string;
+      SUPABASE_SERVICE_ROLE: string;
     }
   }
 }
 
 if (!process.env.SUPABASE_URL) throw new Error('SUPABASE_URL is required');
 
-if (!process.env.SUPABASE_SERVICE_KEY) throw new Error('SUPABASE_SERVICE_KEY is required');
+if (!process.env.SUPABASE_SERVICE_ROLE) throw new Error('SUPABASE_SERVICE_ROLE is required');
 
 // Supabase options example (build your own :))
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
@@ -31,7 +31,7 @@ if (!process.env.SUPABASE_SERVICE_KEY) throw new Error('SUPABASE_SERVICE_KEY is 
 
 export const supabaseClient = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY
+  process.env.SUPABASE_SERVICE_ROLE
   // supabaseOptions
 );
 

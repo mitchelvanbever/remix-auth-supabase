@@ -15,28 +15,28 @@ Open this example on [CodeSandbox](https://codesandbox.com):
 ```sh
 cp .env.example .env
 ```
-2. Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
-3. Add your `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE` in `.env`
+1. Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find the keys you need
+2. Add your `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE` in `.env`
 ```env
-SUPABASE_SERVICE_KEY="{SERVICE_KEY}"
+SUPABASE_SERVICE_ROLE="{SERVICE_ROLE_API_KEY}"
 SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
 ```
 
+> Note: `SUPABASE_SERVICE_ROLE` is a secret and should never be exposed client side. Make sure you only use this in .server files and isn't passed as an env variable to the client ⚠️
+
 ## Using the Remix Auth & SupabaseStrategy 🚀
 
-SupabaseStrategy provides `checkSession` working like Remix Auth `isAuthenticated` but handles token refresh
-
-You must use `checkSession` instead of `isAuthenticated`
+SupabaseStrategy provides `checkSession` with a similar behavior like Remix Auth Strategy `isAuthenticated` with one difference: *it handles refreshing of the sessions as well*
 
 
 ## Example
 
-This is using Remix Auth, `remix-auth-supabase` and `supabase-js` packages.
+This is using `remix-auth`, `remix-auth-supabase` and `supabase-js` packages.
 
 > Thanks to Remix, we can securely use server only authentication with `supabase.auth.api.signInWithEmail`
 >
 > This function should only be called on a server (`loader` or `action` functions).
-> 
+>
 > **⚠️ Never expose your `service_role` key in the browser**
 
 
