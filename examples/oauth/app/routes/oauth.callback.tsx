@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import type { ActionFunction } from 'remix';
-import { useSubmit } from 'remix';
+import type { ActionFunction } from '@remix-run/node';
+import { useSubmit } from '@remix-run/react';
 import { authenticator } from '~/auth.server';
 import { supabaseClient } from '~/supabase.client';
 
