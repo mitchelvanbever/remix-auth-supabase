@@ -4,6 +4,9 @@
   "description": "",
   "license": "",
   "sideEffects": false,
+  "engines": {
+    "node": ">=14"
+  },
   "scripts": {
     "build": "remix build",
     "dev": "node -r dotenv/config node_modules/.bin/remix dev",
@@ -27,8 +30,5 @@
     "dotenv": "^10.0.0",
     "prettier": "^2.5.1",
     "typescript": "^4.5.4"
-  },
-  "engines": {
-    "node": ">=14"
   }
 }

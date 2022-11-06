@@ -19,14 +19,14 @@ cp .env.example .env
 2. Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
 3. Add your `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE`, `PUBLIC_SUPABASE_ANON_KEY` and `SERVER_URL` in `.env`
 ```env
-SUPABASE_SERVICE_KEY="{SERVICE_KEY}"
+SUPABASE_SERVICE_ROLE="{SERVICE_KEY}"
 PUBLIC_SUPABASE_ANON_KEY="{ANON_KEY}"
 SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
 SERVER_URL="{YOUR_REMIX_SERVER_URL}"
 ```
 
 > In local env, `SERVER_URL` is `http://localhost:3000`
-> 
+>
 > In production, `SERVER_URL` is your remix server public URL
 
 ## Using the Remix Auth & SupabaseStrategy 🚀

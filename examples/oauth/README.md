@@ -21,7 +21,7 @@ cp .env.example .env
 2. Go to https://app.supabase.io/project/{PROJECT}/api?page=auth to find your secrets
 3. Add your `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE` and `PUBLIC_SUPABASE_ANON_KEY` in `.env`
 ```env
-SUPABASE_SERVICE_KEY="{SERVICE_KEY}"
+SUPABASE_SERVICE_ROLE="{SERVICE_KEY}"
 PUBLIC_SUPABASE_ANON_KEY="{ANON_KEY}"
 SUPABASE_URL="https://{YOUR_INSTANCE_NAME}.supabase.co"
 

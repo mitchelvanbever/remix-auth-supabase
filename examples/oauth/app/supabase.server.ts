@@ -5,7 +5,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       SUPABASE_URL: string;
-      SUPABASE_SERVICE_KEY: string;
+      SUPABASE_SERVICE_ROLE: string;
       PUBLIC_SUPABASE_ANON_KEY: string;
     }
   }
@@ -13,7 +13,7 @@ declare global {
 
 if (!process.env.SUPABASE_URL) throw new Error('SUPABASE_URL is required');
 
-if (!process.env.SUPABASE_SERVICE_KEY) throw new Error('SUPABASE_SERVICE_KEY is required');
+if (!process.env.SUPABASE_SERVICE_ROLE) throw new Error('SUPABASE_SERVICE_ROLE is required');
 
 // Supabase options example (build your own :))
 // https://supabase.com/docs/reference/javascript/initializing#with-additional-parameters
@@ -29,6 +29,6 @@ if (!process.env.SUPABASE_SERVICE_KEY) throw new Error('SUPABASE_SERVICE_KEY is 
 
 // ⚠️ cloudflare needs you define fetch option : https://github.com/supabase/supabase-js#custom-fetch-implementation
 // Use Remix fetch polyfill for node (See https://remix.run/docs/en/v1/other-api/node)
-export const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_KEY);
+export const supabaseAdmin = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE);
 
 export { Session };
