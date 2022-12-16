@@ -1,7 +1,6 @@
-import type { LoaderFunction } from '@remix-run/node';
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData } from '@remix-run/react';
 
-export const loader: LoaderFunction = () => {
+export const loader = () => {
   return {
     env: {
       SUPABASE_URL: process.env.SUPABASE_URL,
@@ -11,7 +10,7 @@ export const loader: LoaderFunction = () => {
 };
 
 export default function App() {
-  const { env } = useLoaderData<Window>();
+  const { env } = useLoaderData<typeof loader>();
 
   return (
     <html lang="en">

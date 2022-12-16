@@ -118,12 +118,12 @@ authenticator.use(supabaseStrategy);
 
 ```js
 // app/routes/login.ts
-export const loader: LoaderFunction = async ({ request }) =>
+export const loader = async ({ request }: LoaderArgs) =>
   supabaseStrategy.checkSession(request, {
     successRedirect: '/private'
   });
 
-export const action: ActionFunction = async ({ request }) =>
+export const action = async ({ request }: ActionArgs) =>
   authenticator.authenticate('sb', request, {
     successRedirect: '/private',
     failureRedirect: '/login'
@@ -142,7 +142,7 @@ export default function LoginPage() {
 
 ```js
 // app/routes/private.ts
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   // If token refresh and successRedirect not set, reload the current route
   const session = await supabaseStrategy.checkSession(request);
 
@@ -153,7 +153,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 // Handle logout action
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   await authenticator.logout(request, { redirectTo: '/login' });
 };
 ```
@@ -191,7 +191,7 @@ if (session) {
 #### Prevent infinite loop 😱
 ```js
 // app/routes/login.ts
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderArgs) => {
   // Beware, never set failureRedirect equals to the current route
   const session = supabaseStrategy.checkSession(request, {
     successRedirect: '/private',
@@ -208,7 +208,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 ```js
 // app/routes/private.profile.ts
-export const loader: LoaderFunction = async ({ request }) =>
+export const loader = async ({ request }: LoaderArgs) =>
   // If checkSession fails, redirect to login and go back here when authenticated
   supabaseStrategy.checkSession(request, {
     failureRedirect: '/login?redirectTo=/private/profile'
@@ -216,7 +216,7 @@ export const loader: LoaderFunction = async ({ request }) =>
 ```
 ```js
 // app/routes/private.ts
-export const loader: LoaderFunction = async ({ request }) =>
+export const loader = async ({ request }: LoaderArgs) =>
   // If checkSession fails, redirect to login and go back here when authenticated
   supabaseStrategy.checkSession(request, {
     failureRedirect: '/login'
@@ -232,7 +232,7 @@ export const loader = async ({ request }) => {
   });
 };
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   // Always clone request when access formData() in action/loader with authenticator
   // 💡 request.formData() can't be called twice
   const data = await request.clone().formData();
